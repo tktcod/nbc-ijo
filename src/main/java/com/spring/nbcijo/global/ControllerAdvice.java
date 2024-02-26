@@ -1,7 +1,6 @@
 package com.spring.nbcijo.global;
 
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.global.exception.NbcIjoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +14,10 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
-            MethodArgumentNotValidException e) {
+        MethodArgumentNotValidException e) {
         log.error("회원 검증 실패", e);
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = new ErrorResponse(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-
-    @ExceptionHandler(NbcIjoException.class)
-    public ResponseEntity<ErrorResponse> handleNbcIjoException(NbcIjoException e) {
-        log.error(e.getMessage());
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
