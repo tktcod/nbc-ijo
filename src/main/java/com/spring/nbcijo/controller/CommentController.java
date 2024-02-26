@@ -1,6 +1,7 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.CommentRequestDto;
+import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.User;
@@ -9,9 +10,11 @@ import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.CommentService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +45,18 @@ public class CommentController {
             .body(ResponseDto.<Void>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("댓글 작성 성공")
+                .build());
+    }
+
+    @GetMapping("/comments/{postId}")
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getComments(
+        @PathVariable Long postId) {
+        List<CommentResponseDto> dtos = commentService.getComments(postId);
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<CommentResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("댓글 조회 성공")
+                .data(dtos)
                 .build());
     }
 }
