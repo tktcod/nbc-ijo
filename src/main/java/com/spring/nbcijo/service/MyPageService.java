@@ -30,7 +30,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public void updateMyDependency(User user,
+    public void updateMyDescription(User user,
         UpdateDescriptionRequestDto updateDescriptionRequestDto) {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));

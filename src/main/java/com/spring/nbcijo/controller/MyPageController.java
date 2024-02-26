@@ -1,6 +1,7 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
@@ -35,10 +36,11 @@ public class MyPageController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateMyDependency(
+    public ResponseEntity<Void> updateMyDescription(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
-        myPageService.updateMyDependency(userDetails.getUser(), updateDescriptionRequestDto);
+        myPageService.updateMyDescription(userDetails.getUser(), updateDescriptionRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }
