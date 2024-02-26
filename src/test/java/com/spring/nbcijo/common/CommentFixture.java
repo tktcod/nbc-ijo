@@ -7,6 +7,7 @@ public interface CommentFixture extends UserFixture {
 
     Long TEST_COMMENT_ID = 1L;
     String TEST_COMMENT_CONTENT = "content";
+    Long TEST_ANOTHER_COMMENT_ID= 2L;
 
     Comment TEST_COMMENT = Comment.builder()
         .content(TEST_COMMENT_CONTENT)
