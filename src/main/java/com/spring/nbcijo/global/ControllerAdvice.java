@@ -1,5 +1,6 @@
 package com.spring.nbcijo.global;
 
+import com.spring.nbcijo.global.exception.DuplicateUsernameException;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,21 @@ public class ControllerAdvice {
     public ResponseEntity<String> handleUnhandledException(RuntimeException e) {
         log.error("처리되지 않은 예외 발생", e);
         return ResponseEntity.badRequest().body("Unhandled Exception");
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+        IllegalArgumentException e) {
+        log.error(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+        DuplicateUsernameException e) {
+        log.error(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
