@@ -1,5 +1,6 @@
 package com.spring.nbcijo.entity;
 
+import com.spring.nbcijo.dto.request.PostRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +37,15 @@ public class Post extends Timestamped {
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public Post(PostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+    }
+
+    // 연관관계 메서드
+    public void setUser(User user) {
+        this.user = user;
     }
 }
