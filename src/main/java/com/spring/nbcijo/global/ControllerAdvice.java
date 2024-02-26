@@ -1,5 +1,6 @@
 package com.spring.nbcijo.global;
 
+import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.global.exception.NbcIjoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NbcIjoException.class)
     public ResponseEntity<ErrorResponse> handleNbcIjoException(NbcIjoException e) {
+        log.error(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException e) {
         log.error(e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
