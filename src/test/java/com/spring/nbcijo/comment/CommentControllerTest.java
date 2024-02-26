@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.hamcrest.Matchers;
+import com.spring.nbcijo.service.MyPageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,8 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
     private PostRepository postRepository;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private MyPageService myPageService;
 
     @Nested
     @DisplayName("댓글 생성 요청")
