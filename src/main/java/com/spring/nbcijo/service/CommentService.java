@@ -6,7 +6,6 @@ import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.global.exception.NbcIjoException;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class CommentService {
     @Transactional
     public void createComment(User user, Long postId, CommentRequestDto requestDto) {
         Post post = findPost(postId);
-        //검증
+
         Comment comment = Comment.builder()
             .post(post)
             .user(user)
