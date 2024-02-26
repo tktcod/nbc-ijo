@@ -14,8 +14,8 @@ public class MyPageService {
 
     private final UserRepository userRepository;
 
-    public MyInformResponseDto getMyInform(Long id) {
-        User user = userRepository.findById(id)
+    public MyInformResponseDto getMyInform(User user) {
+        user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
         return MyInformResponseDto.builder()
             .id(user.getId())
