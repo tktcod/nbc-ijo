@@ -15,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +30,7 @@ public class CommentController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    @PostMapping("/comments/{postId}")
+    @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ResponseDto<Void>> createComment(
         @PathVariable Long postId,
         @RequestBody @Valid CommentRequestDto requestDto) {
@@ -48,7 +50,7 @@ public class CommentController {
                 .build());
     }
 
-    @GetMapping("/comments/{postId}")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getComments(
         @PathVariable Long postId) {
         List<CommentResponseDto> dtos = commentService.getComments(postId);
@@ -57,6 +59,22 @@ public class CommentController {
                 .statusCode(HttpStatus.OK.value())
                 .message("댓글 조회 성공")
                 .data(dtos)
+                .build());
+    }
+
+    @PatchMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<ResponseDto<Void>> updateComment(
+        @PathVariable Long postId,
+        @RequestBody CommentRequestDto requestDto) {
+        //인증된 유저
+        User user = User.builder().username("username").password("passworrd")
+            .role(UserRoleEnum.USER)
+            .build();
+        commentService.updateComment(user, postId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<Void>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("댓글 수정 성공")
                 .build());
     }
 }

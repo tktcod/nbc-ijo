@@ -53,7 +53,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
         @Test
         void createComment_success() throws Exception {
             //given //when
-            var action = mockMvc.perform(post("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(post("/posts/{postId}/comments", TEST_POST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_COMMENT_REQUEST_DTO)));
@@ -72,7 +72,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .createComment(any(User.class), eq(TEST_POST_ID), any(CommentRequestDto.class));
 
             //when
-            var action = mockMvc.perform(post("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(post("/posts/{postId}/comments", TEST_POST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_COMMENT_REQUEST_DTO)));
@@ -102,7 +102,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .willReturn(List.of(new CommentResponseDto(testComment),
                     new CommentResponseDto(testComment2)));
             //when
-            var action = mockMvc.perform(get("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(get("/posts/{postId}/comments", TEST_POST_ID)
                 .accept(MediaType.APPLICATION_JSON));
 
             //then
@@ -124,7 +124,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .willThrow(new InvalidInputException(ErrorCode.NOT_FOUND_POST));
 
             //when
-            var action = mockMvc.perform(get("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(get("/posts/{postId}/comments", TEST_POST_ID)
                 .accept(MediaType.APPLICATION_JSON));
 
             //then
