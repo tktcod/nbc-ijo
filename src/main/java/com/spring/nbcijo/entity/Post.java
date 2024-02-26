@@ -1,6 +1,7 @@
 package com.spring.nbcijo.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +25,10 @@ public class Post extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public Post(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

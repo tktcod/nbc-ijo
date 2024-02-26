@@ -1,6 +1,8 @@
 package com.spring.nbcijo.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +25,15 @@ public class User extends Timestamped {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @Column
+    private String description;
+
+    @Builder
+    public User(String username, String password, UserRoleEnum role, String description) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.description = description;
+    }
 }
