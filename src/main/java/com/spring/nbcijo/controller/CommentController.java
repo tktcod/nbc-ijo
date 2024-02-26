@@ -4,6 +4,7 @@ import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,10 @@ public class CommentController {
     @PostMapping("/comments/{postId}")
     public ResponseEntity<ResponseDto<Void>> createComment(
         @PathVariable Long postId,
-        @RequestBody CommentRequestDto requestDto) {
+        @RequestBody @Valid CommentRequestDto requestDto) {
         //인증된 유저
         User user = new User();
-        commentService.createTodo(user, postId, requestDto);
+        commentService.createComment(user, postId, requestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<Void>builder()
                 .statusCode(HttpStatus.OK.value())

@@ -1,5 +1,6 @@
 package com.spring.nbcijo.common;
 
+import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.entity.Comment;
 
 public interface CommentFixture extends UserFixture {
@@ -13,5 +14,9 @@ public interface CommentFixture extends UserFixture {
 
     Comment TEST_ANOTHER_COMMENT = Comment.builder()
         .content(ANOTHER_PREFIX + TEST_COMMENT_CONTENT)
+        .build();
+
+    CommentRequestDto TEST_COMMENT_REQUEST_DTO = CommentRequestDto.builder()
+        .content(TEST_COMMENT_CONTENT)
         .build();
 }
