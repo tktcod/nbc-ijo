@@ -1,5 +1,6 @@
 package com.spring.nbcijo.controller;
 
+import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +32,13 @@ public class MyPageController {
                 .statusCode(HttpStatus.OK.value())
                 .message("내 정보 조회가 완료되었습니다.")
                 .data(myInformResponseDto).build());
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateMyDependency(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
+        myPageService.updateMyDependency(userDetails.getUser(), updateDescriptionRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

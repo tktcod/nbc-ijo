@@ -1,5 +1,6 @@
 package com.spring.nbcijo.entity;
 
+import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,5 +44,13 @@ public class User extends Timestamped {
         this.password = password;
         this.role = role;
         this.description = description;
+    }
+
+    public void updateDescription(User user,
+        UpdateDescriptionRequestDto updateDescriptionRequestDto) {
+        this.username = user.username;
+        this.password = user.password;
+        this.role = user.role;
+        this.description = updateDescriptionRequestDto.getUpdateDescription();
     }
 }
