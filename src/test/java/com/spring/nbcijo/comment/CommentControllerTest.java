@@ -16,10 +16,10 @@ import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.global.exception.NbcIjoException;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.service.MyPageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,6 +35,8 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
     private PostRepository postRepository;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private MyPageService myPageService;
 
     @Nested
     @DisplayName("댓글 생성 요청")

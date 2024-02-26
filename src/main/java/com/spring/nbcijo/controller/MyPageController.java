@@ -25,7 +25,7 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResponseDto.<MyInformResponseDto>builder()
                 .statusCode(HttpStatus.OK.value())
-//                .message("내 정보 조회가 완료되었습니다.")
+                .message("내 정보 조회가 완료되었습니다.")
                 .data(myInformResponseDto).build());
     }
 }

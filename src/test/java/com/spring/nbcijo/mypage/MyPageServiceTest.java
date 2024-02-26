@@ -11,6 +11,7 @@ import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.MyPageService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,24 +27,29 @@ class MyPageServiceTest implements UserFixture {
     @Mock
     UserRepository userRepository;
 
-    @Test
-    @DisplayName("유저 정보 조회 성공")
-    void getMyInform_Success() {
-        //given
-        given(userRepository.findById(eq(TEST_USER_ID))).willReturn(Optional.of(TEST_USER));
+    @Nested
+    @DisplayName("마이페이지 내 정보 조회")
+    class getMyInform {
 
-        // when & then
-        assertDoesNotThrow(() -> myPageService.getMyInform(TEST_USER_ID));
-    }
+        @Test
+        @DisplayName("유저 정보 조회 성공")
+        void getMyInform_Success() {
+            //given
+            given(userRepository.findById(eq(TEST_USER_ID))).willReturn(Optional.of(TEST_USER));
 
-    @Test
-    @DisplayName("유저 정보 조회 실패")
-    void getMyInform_fail() {
-        //given
-        given(userRepository.findById(eq(TEST_FAIL_USER_ID))).willReturn(Optional.empty());
+            // when & then
+            assertDoesNotThrow(() -> myPageService.getMyInform(TEST_USER_ID));
+        }
 
-        // when & then
-        assertThrows(InvalidInputException.class,
-            () -> myPageService.getMyInform(TEST_FAIL_USER_ID));
+        @Test
+        @DisplayName("유저 정보 조회 실패")
+        void getMyInform_fail() {
+            //given
+            given(userRepository.findById(eq(TEST_FAIL_USER_ID))).willReturn(Optional.empty());
+
+            // when & then
+            assertThrows(InvalidInputException.class,
+                () -> myPageService.getMyInform(TEST_FAIL_USER_ID));
+        }
     }
 }
