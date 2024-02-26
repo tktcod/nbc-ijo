@@ -7,6 +7,7 @@ import com.spring.nbcijo.global.exception.DuplicateUsernameException;
 import com.spring.nbcijo.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,13 +15,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
         String description = requestDto.getDescription();
-//        String password = passwordEncoder.encode(requestDto.getPassword());
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username);
