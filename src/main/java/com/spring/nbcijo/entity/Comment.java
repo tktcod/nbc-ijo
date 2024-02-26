@@ -1,5 +1,8 @@
 package com.spring.nbcijo.entity;
 
+import com.spring.nbcijo.dto.request.CommentRequestDto;
+import jakarta.persistence.*;
+import java.io.Serializable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "comments")
-public class Comment extends Timestamped {
+public class Comment extends Timestamped implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
