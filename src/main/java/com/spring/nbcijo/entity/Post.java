@@ -39,13 +39,9 @@ public class Post extends Timestamped {
         this.content = content;
     }
 
-    public Post(PostRequestDto requestDto) {
+    public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-    }
-
-    // 연관관계 메서드
-    public void setUser(User user) {
         this.user = user;
     }
 }

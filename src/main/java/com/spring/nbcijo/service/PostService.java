@@ -4,7 +4,10 @@ import com.spring.nbcijo.dto.request.PostRequestDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.User;
+import com.spring.nbcijo.global.enumeration.ErrorCode;
+import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.PostRepository;
+import com.spring.nbcijo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +16,14 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post post = new Post(requestDto);
-        post.setUser(user);
+        user = userRepository.findById(user.getId())
+            .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
 
-        var saved = postRepository.save(post);
+        Post post = new Post(requestDto, user);
 
-        return new PostResponseDto(saved);
+        return new PostResponseDto(postRepository.save(post));
     }
 }
