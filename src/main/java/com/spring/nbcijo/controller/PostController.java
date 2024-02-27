@@ -6,6 +6,7 @@ import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.PostService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +50,15 @@ public class PostController {
                 .build());
     }
 
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getPostList() {
+        List<PostResponseDto> response = postService.getPostList();
+
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<PostResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("게시글 전체 조회 성공")
+                .data(response)
+                .build());
+    }
 }
