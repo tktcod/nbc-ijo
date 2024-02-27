@@ -4,16 +4,15 @@ import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
-import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.Comment;
+import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.CommentRepository;
+import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ public class MyPageService {
         UpdateDescriptionRequestDto updateDescriptionRequestDto) {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
-        if (isPasswordEquals(user.getPassword(), updateDescriptionRequestDto.getPassword())) {
+        if (isPasswordMatches(user.getPassword(), updateDescriptionRequestDto.getPassword())) {
             user.updateDescription(user, updateDescriptionRequestDto);
         } else {
             throw new InvalidInputException(ErrorCode.INVALID_PASSWORD);
@@ -54,55 +53,53 @@ public class MyPageService {
 
     @Transactional
     public void updateMyPassword(User user, UpdatePasswordRequestDto updatePasswordRequestDto) {
+        String encryptNewPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
         PasswordHistory passwordHistory = new PasswordHistory();
-
-//        String encryptCurrentPassword = passwordEncoder.encode(
-//            updatePasswordRequestDto.getCurrentPassword());
-        String encryptNewPassword = passwordEncoder.encode(
-            updatePasswordRequestDto.getNewPassword());
 
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
-        if (isPasswordEquals(user.getPassword(),updatePasswordRequestDto.getCurrentPassword())
-            && isPasswordPreviouslyUsed(user, updatePasswordRequestDto)) {
-            user.updatePassword(encryptNewPassword);
-            PasswordHistory newPasswordHistory = passwordHistory.toPasswordHistory(user,
-                encryptNewPassword);
-            passwordHistoryRepository.save(newPasswordHistory);
-        } else if (
-            isPasswordEquals(user.getPassword(), updatePasswordRequestDto.getCurrentPassword())
-                && !isPasswordPreviouslyUsed(user, updatePasswordRequestDto)) {
-            throw new InvalidInputException(ErrorCode.REUSED_PASSWORD);
-        } else {
+
+        // 비밀 번호 사용자 입력값과 DB의 저장된 값 비교
+        if (!isPasswordMatches(user.getPassword(), updatePasswordRequestDto.getCurrentPassword())) {
             throw new InvalidInputException(ErrorCode.INVALID_PASSWORD);
         }
-    }
 
-    public boolean isPasswordEquals(String password1, String password2) {
-        boolean result = passwordEncoder.matches(password1, password2);
-        return result;
-    }
-
-    public boolean isPasswordPreviouslyUsed(User user,
-        UpdatePasswordRequestDto updatePasswordRequestDto) {
-        boolean result = true;
-        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
-            user);
-        int count = 0;
-        for (PasswordHistory password : passwordList) {
-            count +=
-                isPasswordEquals(updatePasswordRequestDto.getNewPassword(), password.getPassword())
-                    ? 1 : 0;
+        // 최근 3번 안에 사용된 비밀번호 재사용 제한
+        if (!isPasswordPreviouslyUsed(user, updatePasswordRequestDto)) {
+            throw new InvalidInputException(ErrorCode.REUSED_PASSWORD);
         }
-        result = count == 0 ? true : false;
-        return result;
-    }
 
+        // 수정한 비밀번호 User와 PasswordHistory에 저장
+        user.updatePassword(encryptNewPassword);
+        PasswordHistory newPasswordHistory = passwordHistory.toPasswordHistory(user,
+            encryptNewPassword);
+        passwordHistoryRepository.save(newPasswordHistory);
+    }
 
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
         List<CommentResponseDto> listToDtos = list.stream().map(CommentResponseDto::new).collect(
             Collectors.toList());
         return listToDtos;
+    }
+
+    public boolean isPasswordMatches(String passwordInDB, String inputPassword) {
+        return passwordEncoder.matches(inputPassword, passwordInDB);
+    }
+
+    public boolean isPasswordPreviouslyUsed(User user,
+        UpdatePasswordRequestDto updatePasswordRequestDto) {
+        boolean result = true;
+        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
+            user.getId());
+        System.out.println("service passwortList.size() : " + passwordList.size());
+        int count = 0;
+        for (PasswordHistory password : passwordList) {
+            count +=
+                isPasswordMatches(password.getPassword(), updatePasswordRequestDto.getNewPassword())
+                    ? 1 : 0;
+        }
+        result = count == 0 ? true : false;
+        return result;
     }
 }
