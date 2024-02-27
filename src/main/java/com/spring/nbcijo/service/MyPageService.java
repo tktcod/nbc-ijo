@@ -53,7 +53,8 @@ public class MyPageService {
 
     @Transactional
     public void updateMyPassword(User user, UpdatePasswordRequestDto updatePasswordRequestDto) {
-        String encryptNewPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
+        String encryptNewPassword = passwordEncoder.encode(
+            updatePasswordRequestDto.getNewPassword());
         PasswordHistory passwordHistory = new PasswordHistory();
 
         user = userRepository.findById(user.getId())
