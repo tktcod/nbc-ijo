@@ -8,7 +8,10 @@ import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,5 +39,13 @@ public class PostService {
             .orElseThrow(() -> new InvalidInputException(ErrorCode.NOT_FOUND_POST));
 
         return new PostResponseDto(post);
+    }
+
+    public List<PostResponseDto> getPostList() {
+        List<Post> postList = postRepository.findAll(Sort.by(Direction.DESC, "createdAt"));
+
+        return postList.stream()
+            .map(PostResponseDto::new)
+            .toList();
     }
 }
