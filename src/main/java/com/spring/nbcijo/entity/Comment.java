@@ -1,5 +1,6 @@
 package com.spring.nbcijo.entity;
 
+import com.spring.nbcijo.dto.request.CommentRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,5 +42,9 @@ public class Comment extends Timestamped implements Serializable {
         this.content = content;
         this.post = post;
         this.user = user;
+    }
+
+    public void update(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
     }
 }

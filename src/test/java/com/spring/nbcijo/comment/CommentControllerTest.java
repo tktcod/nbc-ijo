@@ -4,10 +4,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.doThrow;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,10 +40,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
 
     @MockBean
     private CommentService commentService;
-    @MockBean
-    private PostRepository postRepository;
-    @MockBean
-    private UserRepository userRepository;
+
     @MockBean
     private MyPageService myPageService;
 
@@ -53,7 +52,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
         @Test
         void createComment_success() throws Exception {
             //given //when
-            var action = mockMvc.perform(post("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(post("/posts/{postId}/comments", TEST_POST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_COMMENT_REQUEST_DTO)));
@@ -72,7 +71,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .createComment(any(User.class), eq(TEST_POST_ID), any(CommentRequestDto.class));
 
             //when
-            var action = mockMvc.perform(post("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(post("/posts/{postId}/comments", TEST_POST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_COMMENT_REQUEST_DTO)));
@@ -102,7 +101,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .willReturn(List.of(new CommentResponseDto(testComment),
                     new CommentResponseDto(testComment2)));
             //when
-            var action = mockMvc.perform(get("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(get("/posts/{postId}/comments", TEST_POST_ID)
                 .accept(MediaType.APPLICATION_JSON));
 
             //then
@@ -124,7 +123,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .willThrow(new InvalidInputException(ErrorCode.NOT_FOUND_POST));
 
             //when
-            var action = mockMvc.perform(get("/comments/{postId}", TEST_POST_ID)
+            var action = mockMvc.perform(get("/posts/{postId}/comments", TEST_POST_ID)
                 .accept(MediaType.APPLICATION_JSON));
 
             //then
@@ -132,6 +131,50 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
                     .value(ErrorCode.NOT_FOUND_POST.getMessage()));
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 수정 요청")
+    class updateComment {
+
+        @DisplayName("댓글 수정 요청 성공")
+        @Test
+        void updateComment_success() throws Exception {
+            //given
+            doNothing().when(commentService).updateComment(any(User.class),
+                eq(TEST_POST_ID), eq(TEST_COMMENT_ID), any(CommentRequestDto.class));
+
+            //when
+            var action = mockMvc.perform(put("/posts/{postId}/comments/{commentId}"
+                , TEST_POST_ID, TEST_COMMENT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TEST_ANOTHER_COMMENT_REQUEST_DTO)));
+
+            //then
+            action.andExpect(status().isOk());
+            verify(commentService, times(1)).updateComment(any(User.class),
+                eq(TEST_POST_ID), eq(TEST_COMMENT_ID), any(CommentRequestDto.class));
+        }
+
+        @DisplayName("댓글 수정 요청 실패")
+        @Test
+        void updateComment_fail() throws Exception{
+            //given
+            doThrow(new InvalidInputException(ErrorCode.NOT_FOUND_POST)).when(commentService)
+                .updateComment(any(User.class), eq(TEST_POST_ID),
+                    eq(TEST_COMMENT_ID), any(CommentRequestDto.class));
+
+            //when
+            var action = mockMvc.perform(put("/posts/{postId}/comments/{commentId}"
+                , TEST_POST_ID, TEST_COMMENT_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TEST_ANOTHER_COMMENT_REQUEST_DTO)));
+
+            //then
+            action.andExpect(status().isBadRequest());
         }
     }
 }
