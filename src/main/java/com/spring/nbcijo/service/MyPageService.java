@@ -49,20 +49,22 @@ public class MyPageService {
     @Transactional
     public void updateMyPassword(User user, UpdatePasswordRequestDto updatePasswordRequestDto) {
         PasswordHistory passwordHistory = new PasswordHistory();
-        String encryptCurrentPassword = passwordEncoder.encode(
-            updatePasswordRequestDto.getCurrentPassword());
+
+//        String encryptCurrentPassword = passwordEncoder.encode(
+//            updatePasswordRequestDto.getCurrentPassword());
         String encryptNewPassword = passwordEncoder.encode(
             updatePasswordRequestDto.getNewPassword());
+
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
-        if (isPasswordEquals(user.getPassword(), encryptCurrentPassword)
+        if (isPasswordEquals(user.getPassword(),updatePasswordRequestDto.getCurrentPassword())
             && isPasswordPreviouslyUsed(user, updatePasswordRequestDto)) {
             user.updatePassword(encryptNewPassword);
             PasswordHistory newPasswordHistory = passwordHistory.toPasswordHistory(user,
                 encryptNewPassword);
             passwordHistoryRepository.save(newPasswordHistory);
         } else if (
-            isPasswordEquals(user.getPassword(), encryptCurrentPassword)
+            isPasswordEquals(user.getPassword(), updatePasswordRequestDto.getCurrentPassword())
                 && !isPasswordPreviouslyUsed(user, updatePasswordRequestDto)) {
             throw new InvalidInputException(ErrorCode.REUSED_PASSWORD);
         } else {
@@ -71,7 +73,8 @@ public class MyPageService {
     }
 
     public boolean isPasswordEquals(String password1, String password2) {
-        return passwordEncoder.matches(password1, password2);
+        boolean result = passwordEncoder.matches(password1, password2);
+        return result;
     }
 
     public boolean isPasswordPreviouslyUsed(User user,
