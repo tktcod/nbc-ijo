@@ -7,7 +7,6 @@ import com.spring.nbcijo.controller.MyPageController;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,7 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
     }
 )
 @MockBean(JpaMetamodelMappingContext.class)
-public class ControllerTest implements UserFixture{
+public class ControllerTest implements UserFixture {
 
     @Autowired
     protected MockMvc mockMvc;
@@ -48,7 +47,8 @@ public class ControllerTest implements UserFixture{
 
         UserDetailsImpl testUserDetails = new UserDetailsImpl(TEST_USER);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-            testUserDetails, testUserDetails.getPassword(), testUserDetails.getAuthorities()));
+        SecurityContextHolder.getContext()
+            .setAuthentication(new UsernamePasswordAuthenticationToken(
+                testUserDetails, testUserDetails.getPassword(), testUserDetails.getAuthorities()));
     }
 }

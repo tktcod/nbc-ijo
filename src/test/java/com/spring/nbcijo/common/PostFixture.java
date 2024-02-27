@@ -2,7 +2,7 @@ package com.spring.nbcijo.common;
 
 import com.spring.nbcijo.entity.Post;
 
-public interface PostFixture extends UserFixture{
+public interface PostFixture extends UserFixture {
 
     Long TEST_POST_ID = 1L;
     String TEST_POST_TITLE = "title";

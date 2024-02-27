@@ -67,7 +67,7 @@ class JwtUtilTest implements UserFixture {
         @Test
         void validateToken_success() {
             // given
-            String token = jwtUtil.createToken(TEST_USER_NAME,UserRoleEnum.USER).substring(7);
+            String token = jwtUtil.createToken(TEST_USER_NAME, UserRoleEnum.USER).substring(7);
 
             // when
             boolean isValid = jwtUtil.validateToken(token);

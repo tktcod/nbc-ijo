@@ -1,7 +1,6 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
-import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
