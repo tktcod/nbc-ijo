@@ -1,6 +1,7 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
@@ -45,9 +46,13 @@ public class MyPageController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseDto>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//        List<PostResponseDto> myPostResponseDtos = myPageService.getMyPosts(userDetails.getUser());
-        return null;
+    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<PostResponseDto> myPostResponseDtos = myPageService.getMyPosts(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<PostResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("내 정보 조회가 완료되었습니다.")
+                .data(myPostResponseDtos).build());
     }
 
 }
