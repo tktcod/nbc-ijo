@@ -23,9 +23,7 @@ public class PostRequestDtoTest implements PostFixture {
         @Test
         void createPostRequestDto_success() {
             // given
-            var postRequestDto = new PostRequestDto();
-            postRequestDto.setTitle(TEST_POST_TITLE);
-            postRequestDto.setContent(TEST_POST_CONTENT);
+            var postRequestDto = new PostRequestDto(TEST_POST_TITLE, TEST_POST_CONTENT);
 
             // when
             var violations = validate(postRequestDto);
@@ -38,9 +36,7 @@ public class PostRequestDtoTest implements PostFixture {
         @Test
         void createPostRequestDto_fail_nullTitle() {
             // given
-            var postRequestDto = new PostRequestDto();
-            postRequestDto.setTitle("");
-            postRequestDto.setContent(TEST_POST_CONTENT);
+            var postRequestDto = new PostRequestDto("", TEST_POST_CONTENT);
 
             // when
             var violations = validate(postRequestDto);
@@ -56,9 +52,7 @@ public class PostRequestDtoTest implements PostFixture {
         @Test
         void createPostRequestDto_fail_nullContent() {
             // given
-            var postRequestDto = new PostRequestDto();
-            postRequestDto.setTitle(TEST_POST_TITLE);
-            postRequestDto.setContent("");
+            var postRequestDto = new PostRequestDto(TEST_POST_TITLE, "");
 
             // when
             var violations = validate(postRequestDto);
