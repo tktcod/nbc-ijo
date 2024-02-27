@@ -30,4 +30,11 @@ public class PostService {
 
         return new PostResponseDto(postRepository.save(post));
     }
+
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new InvalidInputException(ErrorCode.NOT_FOUND_POST));
+
+        return new PostResponseDto(post);
+    }
 }
