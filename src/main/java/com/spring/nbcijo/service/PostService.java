@@ -9,10 +9,12 @@ import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +37,7 @@ public class PostService {
     }
 
     public PostResponseDto getPost(Long postId) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new InvalidInputException(ErrorCode.NOT_FOUND_POST));
+        Post post = findPost(postId);
 
         return new PostResponseDto(post);
     }
@@ -47,5 +48,24 @@ public class PostService {
         return postList.stream()
             .map(PostResponseDto::new)
             .toList();
+    }
+
+    @Transactional
+    public void updatePost(Long postId, PostRequestDto requestDto, User user) {
+        Post post = findPost(postId);
+        validateUser(post.getUser().getId(), user.getId());
+
+        post.update(requestDto);
+    }
+
+    private Post findPost(Long postId) {
+        return postRepository.findById(postId)
+            .orElseThrow(() -> new InvalidInputException(ErrorCode.NOT_FOUND_POST));
+    }
+
+    private void validateUser(Long writerId, Long inputId) {
+        if (!Objects.equals(writerId, inputId)) {
+            throw new InvalidInputException(ErrorCode.NOT_VALID_USER);
+        }
     }
 }
