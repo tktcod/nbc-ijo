@@ -1,6 +1,6 @@
 package com.spring.nbcijo.comment;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.PostFixture;
