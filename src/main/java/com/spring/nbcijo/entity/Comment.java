@@ -1,5 +1,6 @@
 package com.spring.nbcijo.entity;
 
+import com.spring.nbcijo.dto.request.CommentRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
