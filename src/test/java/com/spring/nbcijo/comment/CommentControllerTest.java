@@ -134,4 +134,21 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
                     .value(ErrorCode.NOT_FOUND_POST.getMessage()));
         }
     }
+
+    @Nested
+    @DisplayName("댓글 수정 요청")
+    class updateComment {
+
+        @DisplayName("댓글 수정 요청 성공")
+        @Test
+        void updateComment_success() {
+
+        }
+
+        @DisplayName("댓글 수정 요청 실패")
+        @Test
+        void updateComment_fail() {
+
+        }
+    }
 }

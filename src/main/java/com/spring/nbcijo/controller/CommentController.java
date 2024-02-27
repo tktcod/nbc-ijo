@@ -8,12 +8,14 @@ import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.CommentService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,17 +34,14 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ResponseDto<Void>> createComment(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long postId,
         @RequestBody @Valid CommentRequestDto requestDto) {
         //인증된 유저
-        User user = User.builder().username("username").password("passworrd")
-            .role(UserRoleEnum.USER)
-            .build();
         Post testPost = Post.builder().title("title").content("content").build();
-        userRepository.save(user);
         postRepository.save(testPost);
 
-        commentService.createComment(user, postId, requestDto);
+        commentService.createComment(userDetails.getUser(), postId, requestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<Void>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -64,13 +63,12 @@ public class CommentController {
 
     @PatchMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ResponseDto<Void>> updateComment(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long postId,
+        @PathVariable Long commentId,
         @RequestBody CommentRequestDto requestDto) {
         //인증된 유저
-        User user = User.builder().username("username").password("passworrd")
-            .role(UserRoleEnum.USER)
-            .build();
-        commentService.updateComment(user, postId, requestDto);
+        commentService.updateComment(userDetails.getUser(), postId, commentId,requestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<Void>builder()
                 .statusCode(HttpStatus.OK.value())
