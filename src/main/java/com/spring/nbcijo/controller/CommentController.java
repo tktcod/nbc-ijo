@@ -4,10 +4,7 @@ import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.entity.Post;
-import com.spring.nbcijo.entity.User;
-import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.repository.PostRepository;
-import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.CommentService;
 import jakarta.validation.Valid;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,14 +26,12 @@ public class CommentController {
 
     private final CommentService commentService;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ResponseDto<Void>> createComment(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long postId,
         @RequestBody @Valid CommentRequestDto requestDto) {
-        //인증된 유저
         Post testPost = Post.builder().title("title").content("content").build();
         postRepository.save(testPost);
 
@@ -67,7 +61,6 @@ public class CommentController {
         @PathVariable Long postId,
         @PathVariable Long commentId,
         @RequestBody CommentRequestDto requestDto) {
-        //인증된 유저
         commentService.updateComment(userDetails.getUser(), postId, commentId,requestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<Void>builder()

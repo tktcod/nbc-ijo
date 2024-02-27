@@ -10,6 +10,7 @@ import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +42,37 @@ public class CommentService {
             .toList();
     }
 
+    @Transactional
+    public void updateComment(User user, Long postId, Long commentId, CommentRequestDto requestDto) {
+        findPost(postId);
+        Comment comment = findComment(commentId);
+
+        validateUser(comment.getUser().getId(), user.getId());
+        validatePost(comment.getPost().getId(), postId);
+        comment.update(requestDto);
+    }
+
     private Post findPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new InvalidInputException(ErrorCode.NOT_FOUND_POST)
         );
+    }
+
+    private Comment findComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(
+            () -> new InvalidInputException(ErrorCode.NOT_VALID_USER)
+        );
+    }
+
+    private void validateUser(Long writerId, Long inputId) {
+        if (!Objects.equals(writerId, inputId)) {
+            throw new InvalidInputException(ErrorCode.NOT_VALID_USER);
+        }
+    }
+
+    private void validatePost(Long postId, Long inputId) {
+        if (!Objects.equals(postId, inputId)) {
+            throw new InvalidInputException(ErrorCode.NOT_VALID_POST);
+        }
     }
 }
