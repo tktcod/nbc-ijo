@@ -58,6 +58,14 @@ public class PostService {
         post.update(requestDto);
     }
 
+    @Transactional
+    public void deletePost(Long postId, User user) {
+        Post post = findPost(postId);
+        validateUser(post.getUser().getId(), user.getId());
+
+        postRepository.delete(post);
+    }
+
     private Post findPost(Long postId) {
         return postRepository.findById(postId)
             .orElseThrow(() -> new InvalidInputException(ErrorCode.NOT_FOUND_POST));
