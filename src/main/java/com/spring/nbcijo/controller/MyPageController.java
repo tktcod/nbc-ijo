@@ -2,10 +2,12 @@ package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
+import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.MyPageService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,4 +53,13 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/comments")
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getMyComments(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<CommentResponseDto> myCommentsResponseDtos= myPageService.getMyComments(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<CommentResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("내 정보 조회가 완료되었습니다.")
+                .data(myCommentsResponseDtos).build());
+    }
 }

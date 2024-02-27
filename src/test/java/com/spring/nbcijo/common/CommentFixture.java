@@ -20,4 +20,8 @@ public interface CommentFixture extends UserFixture {
     CommentRequestDto TEST_COMMENT_REQUEST_DTO = CommentRequestDto.builder()
         .content(TEST_COMMENT_CONTENT)
         .build();
+
+    CommentRequestDto TEST_ANOTHER_COMMENT_REQUEST_DTO = CommentRequestDto.builder()
+        .content(ANOTHER_PREFIX + TEST_COMMENT_CONTENT)
+        .build();
 }
