@@ -2,13 +2,16 @@ package com.spring.nbcijo.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 
 import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.PostFixture;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.entity.Comment;
-import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.service.CommentService;
@@ -53,7 +56,8 @@ public class CommentServiceTest implements CommentFixture, PostFixture {
         var testComment =
             CommentTestUtils.get(TEST_COMMENT, 1L, LocalDateTime.now(), TEST_USER, TEST_POST);
         var testComment2 =
-            CommentTestUtils.get(TEST_ANOTHER_COMMENT, 2L, LocalDateTime.now().minusMinutes(1), TEST_USER, TEST_POST);
+            CommentTestUtils.get(TEST_ANOTHER_COMMENT, 2L, LocalDateTime.now().minusMinutes(1),
+                TEST_USER, TEST_POST);
         given(postRepository.findById(eq(TEST_POST_ID))).willReturn(Optional.of(TEST_POST));
         given(commentRepository.findAllByPostIdOrderByCreatedAtDesc(TEST_POST_ID))
             .willReturn(List.of(testComment, testComment2));
