@@ -52,6 +52,17 @@ public class CommentService {
         comment.update(requestDto);
     }
 
+    @Transactional
+    public void deleteComment(User user, Long postId, Long commentId) {
+        findPost(postId);
+        Comment comment = findComment(commentId);
+
+        validateUser(comment.getUser().getId(), user.getId());
+        validatePost(comment.getPost().getId(), postId);
+
+        commentRepository.delete(comment);
+    }
+
     private Post findPost(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new InvalidInputException(ErrorCode.NOT_FOUND_POST)

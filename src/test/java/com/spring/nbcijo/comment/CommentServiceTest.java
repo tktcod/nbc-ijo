@@ -85,10 +85,26 @@ public class CommentServiceTest implements CommentFixture, PostFixture {
         given(commentRepository.findById(TEST_COMMENT_ID)).willReturn(Optional.of(testComment));
 
         //when
-        var request = new CommentRequestDto("updatecContent");
+        var request = new CommentRequestDto("updateContent");
 
         //then
         assertDoesNotThrow(() ->
             commentService.updateComment(TEST_USER, TEST_POST_ID, TEST_COMMENT_ID, request));
+        assertThat(testComment.getContent()).isEqualTo("updateContent");
+    }
+
+    @DisplayName("댓글 삭제")
+    @Test
+    void deleteComment() {
+        //given
+        ReflectionTestUtils.setField(TEST_POST, Post.class, "id", TEST_POST_ID, Long.class);
+        var testPost = TEST_POST;
+        var testComment = CommentTestUtils.get(TEST_COMMENT, TEST_USER, testPost);
+        given(postRepository.findById(TEST_POST_ID)).willReturn(Optional.of(testPost));
+        given(commentRepository.findById(TEST_COMMENT_ID)).willReturn(Optional.of(testComment));
+
+        //when & then
+        assertDoesNotThrow(() ->
+            commentService.deleteComment(TEST_USER, TEST_POST_ID, TEST_COMMENT_ID));
     }
 }
