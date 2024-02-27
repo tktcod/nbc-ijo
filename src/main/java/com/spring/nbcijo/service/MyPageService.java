@@ -2,11 +2,13 @@ package com.spring.nbcijo.service;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
+import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,4 +43,5 @@ public class MyPageService {
             throw new InvalidInputException(ErrorCode.INVALID_PASSWORD);
         }
     }
+
 }

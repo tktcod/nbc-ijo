@@ -1,10 +1,13 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
+import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.MyPageService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +43,12 @@ public class MyPageController {
         @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
         myPageService.updateMyDescription(userDetails.getUser(), updateDescriptionRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponseDto>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<PostResponseDto> myPostResponseDtos = myPageService.getMyPosts(userDetails.getUser());
+        return null;
     }
 
 }
