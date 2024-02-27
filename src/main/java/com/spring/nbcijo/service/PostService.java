@@ -22,7 +22,11 @@ public class PostService {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
 
-        Post post = new Post(requestDto, user);
+        Post post = Post.builder()
+            .title(requestDto.getTitle())
+            .content(requestDto.getContent())
+            .user(user)
+            .build();
 
         return new PostResponseDto(postRepository.save(post));
     }

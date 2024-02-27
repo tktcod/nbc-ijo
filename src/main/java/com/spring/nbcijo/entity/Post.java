@@ -34,14 +34,9 @@ public class Post extends Timestamped {
     private User user;
 
     @Builder
-    public Post(String title, String content) {
+    public Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
-    }
-
-    public Post(PostRequestDto requestDto, User user) {
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
         this.user = user;
     }
 }
