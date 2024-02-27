@@ -10,8 +10,10 @@ import static org.mockito.BDDMockito.verify;
 
 import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.PostFixture;
+import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.entity.Comment;
+import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.service.CommentService;
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest implements CommentFixture, PostFixture {
@@ -69,5 +72,23 @@ public class CommentServiceTest implements CommentFixture, PostFixture {
         assertThat(result).hasSize(2);
         assertThat(result.get(0)).isEqualTo(new CommentResponseDto(testComment));
         assertThat(result.get(1)).isEqualTo(new CommentResponseDto(testComment2));
+    }
+
+    @DisplayName("댓글 수정")
+    @Test
+    void updateComment() {
+        //given
+        ReflectionTestUtils.setField(TEST_POST, Post.class, "id", TEST_POST_ID, Long.class);
+        var testPost = TEST_POST;
+        var testComment = CommentTestUtils.get(TEST_COMMENT, TEST_USER, testPost);
+        given(postRepository.findById(TEST_POST_ID)).willReturn(Optional.of(testPost));
+        given(commentRepository.findById(TEST_COMMENT_ID)).willReturn(Optional.of(testComment));
+
+        //when
+        var request = new CommentRequestDto("updatecContent");
+
+        //then
+        assertDoesNotThrow(() ->
+            commentService.updateComment(TEST_USER, TEST_POST_ID, TEST_COMMENT_ID, request));
     }
 }
