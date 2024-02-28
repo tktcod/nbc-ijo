@@ -57,7 +57,7 @@ public class AdminAuthenticationFilter extends UsernamePasswordAuthenticationFil
         }
 
         // AccessToken 생성
-        String token = jwtUtil.createToken(username, role);
+        String token = jwtUtil.createAccessToken(username, role);
 
         // RefreshToken 생성
         String refreshToken = jwtUtil.createRefreshToken(username, role);
