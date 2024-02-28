@@ -1,12 +1,14 @@
 package com.spring.nbcijo.service;
 
 import com.spring.nbcijo.dto.request.AdminRegisterRequestDto;
+import com.spring.nbcijo.dto.response.UserResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.DuplicateUsernameException;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +38,13 @@ public class AdminService {
             .role(UserRoleEnum.ADMIN)
             .build();
         userRepository.save(user);
+    }
+
+    public List<UserResponseDto> getAllUsers() {
+        List<User> all = userRepository.findAll();
+        return all.stream()
+            .map(UserResponseDto::new)
+            .toList();
     }
 
     private void validateDuplicatedName(String adminName) {
