@@ -23,8 +23,6 @@ import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.repository.PostRepository;
-import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.CommentService;
 import com.spring.nbcijo.service.MyPageService;
 import java.time.LocalDateTime;
@@ -161,7 +159,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
 
         @DisplayName("댓글 수정 요청 실패")
         @Test
-        void updateComment_fail() throws Exception{
+        void updateComment_fail() throws Exception {
             //given
             doThrow(new InvalidInputException(ErrorCode.NOT_FOUND_POST)).when(commentService)
                 .updateComment(any(User.class), eq(TEST_POST_ID),

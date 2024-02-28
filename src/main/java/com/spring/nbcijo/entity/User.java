@@ -1,6 +1,7 @@
 package com.spring.nbcijo.entity;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,7 +9,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +42,9 @@ public class User extends Timestamped {
     @Column
     private String description;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PasswordHistory> passwordHistories = new ArrayList<>();
+
     @Builder
     public User(String username, String password, UserRoleEnum role, String description) {
         this.username = username;
@@ -52,5 +59,9 @@ public class User extends Timestamped {
         this.password = user.password;
         this.role = user.role;
         this.description = updateDescriptionRequestDto.getUpdateDescription();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }
