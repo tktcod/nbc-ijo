@@ -18,30 +18,29 @@ import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.ControllerTest;
 import com.spring.nbcijo.common.PostFixture;
 import com.spring.nbcijo.common.UserFixture;
+import com.spring.nbcijo.controller.CommentController;
 import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.service.CommentService;
-import com.spring.nbcijo.service.MyPageService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+@WebMvcTest(CommentController.class)
 public class CommentControllerTest extends ControllerTest implements CommentFixture, PostFixture,
     UserFixture {
 
     @MockBean
     private CommentService commentService;
-
-    @MockBean
-    private MyPageService myPageService;
 
     @Nested
     @DisplayName("댓글 생성 요청")
