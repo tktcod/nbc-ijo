@@ -63,7 +63,8 @@ public class MyPageController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getMyPosts(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<PostResponseDto> myPostResponseDtos = myPageService.getMyPosts(userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<List<PostResponseDto>>builder()

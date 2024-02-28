@@ -2,7 +2,6 @@ package com.spring.nbcijo.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.nbcijo.dto.request.AdminLoginRequestDto;
-import com.spring.nbcijo.dto.request.LoginRequestDto;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
