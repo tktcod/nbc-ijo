@@ -1,5 +1,6 @@
 package com.spring.nbcijo.mypage;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,28 +9,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.ControllerTest;
+import com.spring.nbcijo.common.PostFixture;
 import com.spring.nbcijo.common.UserFixture;
-import com.spring.nbcijo.repository.PostRepository;
-import com.spring.nbcijo.repository.UserRepository;
-import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.controller.MyPageController;
 import com.spring.nbcijo.service.MyPageService;
 import java.security.Principal;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
-class MyPageControllerTest extends ControllerTest implements UserFixture {
+@WebMvcTest(MyPageController.class)
+class MyPageControllerTest extends ControllerTest implements UserFixture, PostFixture ,
+    CommentFixture {
 
     @MockBean
     MyPageService myPageService;
-    @MockBean
-    private CommentService commentService;
-    @MockBean
-    private PostRepository postRepository;
-    @MockBean
-    private UserRepository userRepository;
     private Principal mockPrincipal;
 
     @Test
@@ -78,4 +77,39 @@ class MyPageControllerTest extends ControllerTest implements UserFixture {
         action.andExpect(status().isOk())
             .andDo(print());
     }
+
+    @Test
+    @DisplayName("내가 쓴 글 목록 조회 성공")
+    void getMyPosts_success() throws Exception {
+        //given
+        given(myPageService.getMyPosts(eq(TEST_USER))).willReturn(
+            List.of(postResponseDto1, postResponseDto2));
+        // when
+        var action = mockMvc.perform(get("/my/posts")
+            .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        action.andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.data[*].content",hasItems(TEST_POST_CONTENT)))
+            .andDo(print());
+    }
+
+    @Test
+    @DisplayName("내가 쓴 댓글 목록 조회 성공")
+    void getMyPosts_fail() throws Exception {
+        //given
+        given(myPageService.getMyComments(eq(TEST_USER))).willReturn(
+            List.of(commentResponseDto1, commentResponseDto2));
+        // when
+        var action = mockMvc.perform(get("/my/comments")
+            .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        action.andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.data[*].content",hasItems(TEST_COMMENT_CONTENT,TEST_ANOTHER_COMMENT.getContent())))
+            .andDo(print());
+    }
+
 }
