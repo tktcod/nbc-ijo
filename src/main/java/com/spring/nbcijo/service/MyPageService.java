@@ -101,7 +101,7 @@ public class MyPageService {
 
     private boolean isPasswordPreviouslyUsed(User user,
         UpdatePasswordRequestDto updatePasswordRequestDto) {
-        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
+        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByCreatedAtDesc(
             user.getId());
         for (PasswordHistory password : passwordList) {
             if (isPasswordMatches(password.getPassword(),
