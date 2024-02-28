@@ -2,14 +2,17 @@ package com.spring.nbcijo.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 
 import com.spring.nbcijo.common.PostFixture;
+import com.spring.nbcijo.dto.request.PostRequestDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.Post;
+import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.PostService;
@@ -20,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest implements PostFixture {
@@ -58,5 +62,23 @@ class PostServiceTest implements PostFixture {
 
         // then
         assertThat(result).isEqualTo(new PostResponseDto(testPost));
+    }
+
+    @DisplayName("게시글 수정")
+    @Test
+    void updatePost() {
+        // given
+        ReflectionTestUtils.setField(TEST_USER, User.class, "id", TEST_USER_ID, Long.class);
+        var testPost = PostTestUtils.get(TEST_POST, TEST_USER);
+        given(postRepository.findById(eq(TEST_POST_ID))).willReturn(Optional.of(testPost));
+
+        // when
+        var request = new PostRequestDto("updateTitle", "updateContent");
+
+        // then
+        assertDoesNotThrow(() ->
+            postService.updatePost(TEST_POST_ID, request, TEST_USER));
+        assertThat(testPost.getTitle()).isEqualTo("updateTitle");
+        assertThat(testPost.getContent()).isEqualTo("updateContent");
     }
 }
