@@ -41,30 +41,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
         FilterChain filterChain) throws ServletException, IOException {
 
-        // 로그인 및 회원가입 인증 예외 처리
-        String method = req.getMethod();
-        String requestURI = req.getRequestURI();
-
-        List<String> exemptedUrls = Arrays.asList(
-            "/auth/login",
-            "/auth/signup",
-            "/auth/logout",
-            "/admin/register"
-        );
-
-        if (exemptedUrls.contains(requestURI)) {
-            // exemptedUrls에 포함된 주소로 요청된 경우
-            filterChain.doFilter(req, res); // 다음 필터로 요청 전달
-            return;
-        }
-
-        if ("GET".equals(method) && !requestURI.startsWith("/my")) {
-            // GET 요청이이고 프로필조회 기능이 아닌경우
-            filterChain.doFilter(req, res); // 다음 필터로 요청 전달
-            return;
-        }
-
         String tokenValue = jwtUtil.getJwtFromHeader(req);
+        if (!StringUtils.hasText(tokenValue)) {
+            filterChain.doFilter(req, res);
+            return;
+        }
         // Access 토큰 유효성 검사, 만료된 토큰일 경우 다음 조건문 실행
         if (!StringUtils.hasText(tokenValue) || !jwtUtil.validateAccessToken(tokenValue)) {
             log.error("AccessToken이 유효하지 않습니다");
