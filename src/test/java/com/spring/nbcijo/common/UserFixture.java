@@ -1,5 +1,7 @@
 package com.spring.nbcijo.common;
 
+import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
@@ -14,6 +16,8 @@ public interface UserFixture {
     String TEST_USER_NAME = "username";
     String TEST_USER_PASSWORD = "password";
     String TEST_USER_DESCRIPTION = "default message";
+    String TEST_USER_UPDATE_DESCRIPTION = "update message";
+    String TEST_NEW_PASSWORD = "newPw123!";
 
     User TEST_USER = User.builder()
         .username(TEST_USER_NAME)
@@ -34,4 +38,10 @@ public interface UserFixture {
         .role(UserRoleEnum.USER)
         .description(TEST_USER_DESCRIPTION)
         .build();
+
+    UpdateDescriptionRequestDto TEST_DESCRIPTION_UPDATE_REQUEST = new UpdateDescriptionRequestDto(
+        TEST_USER.getPassword(), TEST_USER_UPDATE_DESCRIPTION);
+
+    UpdatePasswordRequestDto TEST_PASSWORD_UPDATE_REQUEST = new UpdatePasswordRequestDto(
+        TEST_USER_PASSWORD, TEST_NEW_PASSWORD);
 }
