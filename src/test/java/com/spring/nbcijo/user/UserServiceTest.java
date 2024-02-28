@@ -77,7 +77,6 @@ public class UserServiceTest implements UserFixture {
             assertThatThrownBy(() -> userService.signup(TEST_SIGN_UP_REQUEST_DTO))
                 .isInstanceOf(DuplicateUsernameException.class);
         }
-
     }
 
     @Nested

@@ -13,9 +13,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class JwtAuthenticationFilterTest implements UserFixture {
 
@@ -45,7 +47,7 @@ public class JwtAuthenticationFilterTest implements UserFixture {
     }
 
     private void signUp() throws Exception {
-        mockMvc.perform(post("/user/sign")
+        mockMvc.perform(post("/user/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(TEST_SIGN_UP_REQUEST_DTO))
             .accept(MediaType.APPLICATION_JSON));

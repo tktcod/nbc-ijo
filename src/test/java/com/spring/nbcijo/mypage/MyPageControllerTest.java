@@ -9,27 +9,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.spring.nbcijo.common.ControllerTest;
 import com.spring.nbcijo.common.UserFixture;
-import com.spring.nbcijo.repository.PostRepository;
-import com.spring.nbcijo.repository.UserRepository;
-import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.controller.MyPageController;
 import com.spring.nbcijo.service.MyPageService;
-import java.security.Principal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+@WebMvcTest(MyPageController.class)
 class MyPageControllerTest extends ControllerTest implements UserFixture {
 
     @MockBean
     MyPageService myPageService;
-    @MockBean
-    private CommentService commentService;
-    @MockBean
-    private PostRepository postRepository;
-    @MockBean
-    private UserRepository userRepository;
-    private Principal mockPrincipal;
 
     @Test
     @DisplayName("내 정보 조회 성공")
