@@ -16,6 +16,8 @@ import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.PostService;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +54,7 @@ class PostServiceTest implements PostFixture {
         verify(postRepository, times(1)).save(any(Post.class));
     }
 
-    @DisplayName("게시물 조회")
+    @DisplayName("게시글 조회")
     @Test
     void getPost() {
         // given
@@ -62,6 +66,26 @@ class PostServiceTest implements PostFixture {
 
         // then
         assertThat(result).isEqualTo(new PostResponseDto(testPost));
+    }
+
+    @DisplayName("게시글 전체 조회")
+    @Test
+    void getPostList() {
+        // given
+        var testPost1 = PostTestUtils.get(TEST_POST, 1L,
+            LocalDateTime.now(), TEST_USER);
+        var testPost2 = PostTestUtils.get(TEST_POST, 2L,
+            LocalDateTime.now().minusMinutes(1), TEST_USER);
+        given(postRepository.findAll(Sort.by(Direction.DESC, "createdAt")))
+            .willReturn(List.of(testPost1, testPost2));
+
+        // when
+        var result = postService.getPostList();
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0)).isEqualTo(new PostResponseDto(testPost1));
+        assertThat(result.get(1)).isEqualTo(new PostResponseDto(testPost2));
     }
 
     @DisplayName("게시글 수정")
