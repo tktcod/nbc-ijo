@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
         // AccessToken 생성
-        String token = jwtUtil.createToken(username, role);
+        String token = jwtUtil.createAccessToken(username, role);
 
         // RefreshToken 생성
         String refreshToken = jwtUtil.createRefreshToken(username, role);
