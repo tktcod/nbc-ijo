@@ -10,6 +10,7 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
@@ -30,7 +31,8 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    public final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    public final long REFRESH_TOKEN_TIME = 24 * 60 * 60 * 1000L; // 24시간
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -57,6 +59,31 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String createRefreshToken(String username, UserRoleEnum role) {
+        Date date = new Date();
+
+        return Jwts.builder()
+            .setSubject(username) // 사용자 식별자값(ID)
+            .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+            .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME)) // 만료 시간
+            .setIssuedAt(date) // 발급일
+            .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+            .compact();
+    }
+
+    // RefreshToken으로 AccessToken 재발급
+    public String generateAccessTokenFromRefreshToken(String refreshToken) {
+        // refreshToken에서 사용자 정보 추출
+        Claims refreshTokenClaims = Jwts.parserBuilder().setSigningKey(key).build()
+            .parseClaimsJws(refreshToken).getBody();
+        String username = refreshTokenClaims.getSubject();
+        UserRoleEnum role = UserRoleEnum.valueOf(
+            (String) refreshTokenClaims.get(AUTHORIZATION_KEY));
+
+        // 새로운 accessToken 생성
+        return createToken(username, role);
+    }
+
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -66,7 +93,37 @@ public class JwtUtil {
         return null;
     }
 
+    // 쿠키에서 RefreshToken 가져오기
+    public String getRefreshTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refreshToken")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
     // 토큰 검증
+    public boolean validateAccessToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            return true;    // 만료된 토큰일 경우 재검증
+        } catch (UnsupportedJwtException e) {
+            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+        }
+        return false;
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -81,6 +138,20 @@ public class JwtUtil {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
         return false;
+    }
+
+    // 토큰 만료 확인
+    public boolean isAccessTokenExpired(String accessToken) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
+            return true; //유효한 토큰
+        } catch (ExpiredJwtException e) {
+            return true; // 만료된 토큰
+        } catch (IllegalArgumentException | UnsupportedJwtException | SecurityException |
+                 MalformedJwtException | SignatureException e) {
+            log.error("유효하지 않은 토큰입니다.");
+        }
+        return false; // 유효하지 않은 토큰
     }
 
     // 토큰에서 사용자 정보 가져오기

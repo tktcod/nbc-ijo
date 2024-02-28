@@ -55,4 +55,13 @@ public class MyPageController {
                 .data(myPostResponseDtos).build());
     }
 
+    @GetMapping("/comments")
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getMyComments(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<CommentResponseDto> myCommentsResponseDtos= myPageService.getMyComments(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<CommentResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("내 정보 조회가 완료되었습니다.")
+                .data(myCommentsResponseDtos).build());
+    }
 }
