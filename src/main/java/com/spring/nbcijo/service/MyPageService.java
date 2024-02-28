@@ -106,13 +106,12 @@ public class MyPageService {
         UpdatePasswordRequestDto updatePasswordRequestDto) {
         List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
             user.getId());
-        int count = 0;
         for (PasswordHistory password : passwordList) {
             if (isPasswordMatches(password.getPassword(),
                 updatePasswordRequestDto.getNewPassword())) {
-                count = count + 1;
+                return false;
             }
         }
-        return count == 0;
+        return true;
     }
 }
