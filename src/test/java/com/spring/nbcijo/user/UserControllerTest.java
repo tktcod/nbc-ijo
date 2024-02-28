@@ -68,7 +68,6 @@ public class UserControllerTest extends ControllerTest {
     @DisplayName("로그아웃 요청")
     class logout {
 
-
         @DisplayName("로그아웃 요청 성공")
         @Test
         void logout_success() throws Exception {

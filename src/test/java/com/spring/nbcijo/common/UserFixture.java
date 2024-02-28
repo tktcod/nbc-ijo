@@ -1,5 +1,6 @@
 package com.spring.nbcijo.common;
 
+import com.spring.nbcijo.dto.request.LoginRequestDto;
 import com.spring.nbcijo.dto.request.SignupRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.entity.User;
@@ -15,6 +16,7 @@ public interface UserFixture {
     String TEST_USER_NAME = "username";
     String TEST_USER_PASSWORD = "Dd1@Dd1@";
     String TEST_USER_DESCRIPTION = "default message";
+    UserRoleEnum TEST_USER_ROLE = UserRoleEnum.USER;
 
     User TEST_USER = User.builder()
         .username(TEST_USER_NAME)
@@ -42,5 +44,10 @@ public interface UserFixture {
         .username(TEST_USER_NAME)
         .role(UserRoleEnum.USER)
         .description(TEST_USER_DESCRIPTION)
+        .build();
+
+    LoginRequestDto TEST_LOGIN_REQUEST_DTO = LoginRequestDto.builder()
+        .username(TEST_USER_NAME)
+        .password(TEST_USER_PASSWORD)
         .build();
 }
