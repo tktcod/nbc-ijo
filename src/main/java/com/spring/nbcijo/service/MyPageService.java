@@ -83,16 +83,14 @@ public class MyPageService {
 
     public List<PostResponseDto> getMyPosts(User user) {
         List<Post> postList = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-        List<PostResponseDto> postListToDtos = postList.stream().map(PostResponseDto::new).collect(
+        return postList.stream().map(PostResponseDto::new).collect(
             Collectors.toList());
-        return postListToDtos;
     }
 
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-        List<CommentResponseDto> listToDtos = list.stream().map(CommentResponseDto::new).collect(
+        return list.stream().map(CommentResponseDto::new).collect(
             Collectors.toList());
-        return listToDtos;
     }
 
     private boolean isPasswordMatches(String passwordInDB, String inputPassword) {

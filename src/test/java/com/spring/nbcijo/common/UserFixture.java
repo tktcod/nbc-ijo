@@ -21,6 +21,7 @@ public interface UserFixture {
     String TEST_USER_DESCRIPTION = "default message";
     String TEST_USER_UPDATE_DESCRIPTION = "update message";
     String TEST_NEW_PASSWORD = "newPw123!";
+    String TEST_NEW_PASSWORD_FAIL = "newPw123";
 
     User TEST_USER = User.builder()
         .username(TEST_USER_NAME)
@@ -51,7 +52,7 @@ public interface UserFixture {
     PasswordHistory PASSWORD_HISTORY2 = PasswordHistory.builder()
         .createdAt(LocalDateTime.now().plusHours(2))
         .user(TEST_REPOSITORY_USER)
-        .password(REPOSITORY_PREFIX+TEST_REPOSITORY_USER.getPassword())
+        .password(REPOSITORY_PREFIX + TEST_REPOSITORY_USER.getPassword())
         .build();
 
     PasswordHistory PASSWORD_HISTORY3 = PasswordHistory.builder()
@@ -72,4 +73,7 @@ public interface UserFixture {
 
     UpdatePasswordRequestDto TEST_PASSWORD_UPDATE_REQUEST = new UpdatePasswordRequestDto(
         TEST_USER_PASSWORD, TEST_NEW_PASSWORD);
+
+    UpdatePasswordRequestDto TEST_PASSWORD_UPDATE_REQUEST_FAIL = new UpdatePasswordRequestDto(
+        TEST_USER_PASSWORD, TEST_NEW_PASSWORD_FAIL);
 }
