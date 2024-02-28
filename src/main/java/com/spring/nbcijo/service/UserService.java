@@ -1,6 +1,10 @@
 package com.spring.nbcijo.service;
 
 import com.spring.nbcijo.dto.request.SignupRequestDto;
+
+import com.spring.nbcijo.entity.RefreshTokenBlacklist;
+import com.spring.nbcijo.jwt.JwtUtil;
+import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
@@ -8,6 +12,7 @@ import com.spring.nbcijo.global.exception.DuplicateUsernameException;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +23,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenBlacklistRepository refreshTokenBlacklistRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     private final PasswordHistoryRepository passwordHistoryRepository;
 
     public void signup(SignupRequestDto requestDto) {
@@ -47,5 +54,18 @@ public class UserService {
             .build();
         passwordHistoryRepository.save(passwordHistory);
 
+    }
+
+    public void logout(String refreshToken) {
+        Date expirationDate = jwtUtil.extractExpirationDateFromToken(refreshToken);
+        if (expirationDate == null) {
+            throw new IllegalArgumentException("로그아웃 실패 : Refresh Token이 유효하지 않습니다.");
+        }
+
+        RefreshTokenBlacklist refreshTokenBlacklist = RefreshTokenBlacklist.builder()
+            .refreshToken(refreshToken)
+            .expirationDate(expirationDate)
+            .build();
+        refreshTokenBlacklistRepository.save(refreshTokenBlacklist);
     }
 }

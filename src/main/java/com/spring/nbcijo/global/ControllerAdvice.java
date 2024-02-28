@@ -16,7 +16,7 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
         MethodArgumentNotValidException e) {
-        log.error("회원 검증 실패", e);
+        log.error(e.getMessage());
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = new ErrorResponse(message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

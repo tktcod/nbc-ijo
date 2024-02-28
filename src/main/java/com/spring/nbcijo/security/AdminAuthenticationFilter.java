@@ -1,7 +1,7 @@
 package com.spring.nbcijo.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.nbcijo.dto.request.LoginRequestDto;
+import com.spring.nbcijo.dto.request.AdminLoginRequestDto;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -15,26 +15,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Slf4j(topic = "로그인 및 JWT 생성")
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@Slf4j
+public class AdminAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public AdminAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/auth/login");
+        setFilterProcessesUrl("/admin/login");
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
         HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
-                LoginRequestDto.class);
+            AdminLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                AdminLoginRequestDto.class);
 
             return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    requestDto.getUsername(),
+                    requestDto.getAdminName(),
                     requestDto.getPassword(),
                     null
                 )
@@ -51,6 +51,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws IOException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+
+        if (!role.equals(UserRoleEnum.ADMIN)) {
+            return;
+        }
+
         // AccessToken 생성
         String token = jwtUtil.createAccessToken(username, role);
 

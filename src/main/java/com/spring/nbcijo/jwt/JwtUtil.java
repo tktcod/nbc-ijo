@@ -46,7 +46,7 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String username, UserRoleEnum role) {
+    public String createAccessToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
@@ -81,7 +81,7 @@ public class JwtUtil {
             (String) refreshTokenClaims.get(AUTHORIZATION_KEY));
 
         // 새로운 accessToken 생성
-        return createToken(username, role);
+        return createAccessToken(username, role);
     }
 
     // header 에서 JWT 가져오기
@@ -124,7 +124,7 @@ public class JwtUtil {
         return false;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateRefreshToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -144,7 +144,7 @@ public class JwtUtil {
     public boolean isAccessTokenExpired(String accessToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
-            return true; //유효한 토큰
+            return false; //유효한 토큰
         } catch (ExpiredJwtException e) {
             return true; // 만료된 토큰
         } catch (IllegalArgumentException | UnsupportedJwtException | SecurityException |
@@ -152,6 +152,20 @@ public class JwtUtil {
             log.error("유효하지 않은 토큰입니다.");
         }
         return false; // 유효하지 않은 토큰
+    }
+
+    public Date extractExpirationDateFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+            return claims.getExpiration();
+        } catch (Exception e) {
+            log.error("유효하지 않은 토큰입니다.");
+            return null;
+        }
     }
 
     // 토큰에서 사용자 정보 가져오기
