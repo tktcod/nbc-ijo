@@ -20,8 +20,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordHistoryRepository passwordHistoryRepository;
-    private PasswordHistory passwordHistory;
-    private User user;
 
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -35,14 +33,14 @@ public class UserService {
         }
 
         // 유저 등록
-        user = User.builder()
+        User user = User.builder()
             .username(username)
             .password(password)
             .role(UserRoleEnum.USER)
             .description(description)
             .build();
         userRepository.save(user);
-        passwordHistory = PasswordHistory.builder()
+        PasswordHistory passwordHistory = PasswordHistory.builder()
             .user(user)
             .password(password)
             .createdAt(LocalDateTime.now())

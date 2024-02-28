@@ -84,23 +84,21 @@ public class MyPageService {
         return listToDtos;
     }
 
-    public boolean isPasswordMatches(String passwordInDB, String inputPassword) {
+    private boolean isPasswordMatches(String passwordInDB, String inputPassword) {
         return passwordEncoder.matches(inputPassword, passwordInDB);
     }
 
-    public boolean isPasswordPreviouslyUsed(User user,
+    private boolean isPasswordPreviouslyUsed(User user,
         UpdatePasswordRequestDto updatePasswordRequestDto) {
-        boolean result = true;
         List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
             user.getId());
-        System.out.println("service passwortList.size() : " + passwordList.size());
         int count = 0;
         for (PasswordHistory password : passwordList) {
-            count +=
-                isPasswordMatches(password.getPassword(), updatePasswordRequestDto.getNewPassword())
-                    ? 1 : 0;
+            if (isPasswordMatches(password.getPassword(),
+                updatePasswordRequestDto.getNewPassword())) {
+                count = count + 1;
+            }
         }
-        result = count == 0 ? true : false;
-        return result;
+        return count == 0;
     }
 }
