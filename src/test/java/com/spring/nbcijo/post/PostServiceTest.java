@@ -1,5 +1,6 @@
 package com.spring.nbcijo.post;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
@@ -7,6 +8,7 @@ import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 
 import com.spring.nbcijo.common.PostFixture;
+import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
@@ -42,5 +44,19 @@ class PostServiceTest implements PostFixture {
         assertDoesNotThrow(() -> postService
             .createPost(TEST_POST_REQUEST_DTO, TEST_USER));
         verify(postRepository, times(1)).save(any(Post.class));
+    }
+
+    @DisplayName("게시물 조회")
+    @Test
+    void getPost() {
+        // given
+        var testPost = PostTestUtils.get(TEST_POST, TEST_USER);
+        given(postRepository.findById(TEST_POST_ID)).willReturn(Optional.of(testPost));
+
+        // when
+        var result = postService.getPost(TEST_POST_ID);
+
+        // then
+        assertThat(result).isEqualTo(new PostResponseDto(testPost));
     }
 }

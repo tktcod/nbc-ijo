@@ -15,12 +15,12 @@ public class PostTestUtils {
     public static Post get(
         Post post,
         Long id,
-        LocalDateTime createAt,
+        LocalDateTime createdAt,
         User user
     ) {
         var newPost = SerializationUtils.clone(post);
         ReflectionTestUtils.setField(newPost, Post.class, "id", id, Long.class);
-        ReflectionTestUtils.setField(newPost, Post.class, "createdAt", createAt, LocalDateTime.class);
+        ReflectionTestUtils.setField(newPost, Post.class, "createdAt", createdAt, LocalDateTime.class);
         ReflectionTestUtils.setField(newPost, "user", user, User.class);
         return newPost;
 
