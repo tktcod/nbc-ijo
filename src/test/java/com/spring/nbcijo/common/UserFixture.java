@@ -39,6 +39,13 @@ public interface UserFixture {
         .description(TEST_USER_DESCRIPTION)
         .build();
 
+    SignupRequestDto TEST_ANOTHER_SIGN_UP_REQUEST_DTO = SignupRequestDto.builder()
+        .username("userid")
+        .password(TEST_USER_PASSWORD)
+        .passwordConfirm(TEST_USER_PASSWORD)
+        .description(TEST_USER_DESCRIPTION)
+        .build();
+
     MyInformResponseDto TEST_USER_RESPONSE = MyInformResponseDto.builder()
         .id(TEST_USER_ID)
         .username(TEST_USER_NAME)

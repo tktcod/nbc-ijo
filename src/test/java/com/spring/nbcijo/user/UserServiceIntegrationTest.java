@@ -36,7 +36,7 @@ public class UserServiceIntegrationTest implements UserFixture {
     @Test
     void singUp() {
         //given
-        var requestDto = TEST_SIGN_UP_REQUEST_DTO;
+        var requestDto = TEST_ANOTHER_SIGN_UP_REQUEST_DTO;
 
         //when
         userService.signup(requestDto);
@@ -55,7 +55,7 @@ public class UserServiceIntegrationTest implements UserFixture {
 
     @DisplayName("로그아웃")
     @Test
-    void login() {
+    void logout() {
         //given
         String token = createRefreshToken();
 
