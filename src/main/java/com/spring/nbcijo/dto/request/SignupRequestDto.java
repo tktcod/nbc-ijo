@@ -20,7 +20,7 @@ public class SignupRequestDto {
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*-])[A-Za-z\\d!@#$%^&*-]{8,15}$")
-    private String password_confirm;
+    private String passwordConfirm;
 
     private String description;
 }
