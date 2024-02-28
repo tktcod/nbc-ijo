@@ -20,6 +20,7 @@ public interface UserFixture {
         .username(TEST_USER_NAME)
         .password(TEST_USER_PASSWORD)
         .description(TEST_USER_DESCRIPTION)
+
         .role(UserRoleEnum.USER)
         .build();
 

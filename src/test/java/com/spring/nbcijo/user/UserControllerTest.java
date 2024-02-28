@@ -68,6 +68,7 @@ public class UserControllerTest extends ControllerTest {
     @DisplayName("로그아웃 요청")
     class logout {
 
+
         @DisplayName("로그아웃 요청 성공")
         @Test
         void logout_success() throws Exception {
@@ -94,6 +95,7 @@ public class UserControllerTest extends ControllerTest {
             doThrow(new IllegalArgumentException()).when(userService)
                 .logout(any(String.class));
 
+            // when
             var action = mockMvc.perform(post("/user/logout")
                 .accept(MediaType.APPLICATION_JSON));
 
