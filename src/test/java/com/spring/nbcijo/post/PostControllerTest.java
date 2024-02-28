@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -86,7 +87,7 @@ class PostControllerTest extends ControllerTest implements PostFixture, UserFixt
             action
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
-                .value(ErrorCode.NOT_FOUND_POST.getMessage()));
+                    .value(ErrorCode.NOT_FOUND_POST.getMessage()));
         }
     }
 
@@ -125,6 +126,42 @@ class PostControllerTest extends ControllerTest implements PostFixture, UserFixt
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_POST_REQUEST_DTO)));
+
+            // then
+            action.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                    .value(ErrorCode.NOT_VALID_USER.getMessage()));
+        }
+    }
+
+    @Nested
+    @DisplayName("게시글 삭제 요청")
+    class deletePost {
+
+        @DisplayName("게시글 삭제 요청 성공")
+        @Test
+        void deletePost_success() throws Exception {
+            // given
+            doNothing().when(postService).deletePost(eq(TEST_POST_ID), any(User.class));
+
+            // when
+            var action = mockMvc.perform(delete("/posts/{postId}", TEST_POST_ID));
+
+            // then
+            action.andExpect(status().isOk());
+            verify(postService, times(1))
+                .deletePost(eq(TEST_POST_ID), any(User.class));
+        }
+
+        @DisplayName("게시글 삭제 요청 실패")
+        @Test
+        void deletePost_fail() throws Exception {
+            // given
+            doThrow(new InvalidInputException(ErrorCode.NOT_VALID_USER)).when(postService)
+                .deletePost(eq(TEST_POST_ID), any(User.class));
+
+            // when
+            var action = mockMvc.perform(delete("/posts/{postId}", TEST_POST_ID));
 
             // then
             action.andExpect(status().isBadRequest())
