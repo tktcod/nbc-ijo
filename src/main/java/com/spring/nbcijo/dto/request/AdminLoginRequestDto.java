@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class LoginRequestDto {
+public class AdminLoginRequestDto {
 
     @NotNull
-    private String username;
+    private String adminName;
     @NotNull
     private String password;
 }

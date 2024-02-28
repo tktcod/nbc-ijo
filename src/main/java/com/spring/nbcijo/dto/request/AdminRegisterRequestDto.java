@@ -7,11 +7,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SignupRequestDto {
+public class AdminRegisterRequestDto {
 
     @NotNull
     @Pattern(regexp = "^[a-z0-9]{4,10}$")
-    private String username;
+    private String adminName;
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*-])[A-Za-z\\d!@#$%^&*-]{8,15}$")
@@ -20,7 +20,8 @@ public class SignupRequestDto {
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*-])[A-Za-z\\d!@#$%^&*-]{8,15}$")
-    private String passwordConfirm;
+    private String password_confirm;
 
-    private String description;
+    @NotNull
+    private String adminToken;
 }

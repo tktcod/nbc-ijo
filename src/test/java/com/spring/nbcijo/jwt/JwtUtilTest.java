@@ -38,7 +38,7 @@ class JwtUtilTest implements UserFixture {
     @Test
     void createToken() {
         // when
-        String token = jwtUtil.createToken(TEST_USER_NAME, UserRoleEnum.USER);
+        String token = jwtUtil.createAccessToken(TEST_USER_NAME, UserRoleEnum.USER);
 
         // then
         assertNotNull(token);
@@ -67,10 +67,11 @@ class JwtUtilTest implements UserFixture {
         @Test
         void validateToken_success() {
             // given
-            String token = jwtUtil.createToken(TEST_USER_NAME, UserRoleEnum.USER).substring(7);
+            String token = jwtUtil.createAccessToken(TEST_USER_NAME, UserRoleEnum.USER)
+                .substring(7);
 
             // when
-            boolean isValid = jwtUtil.validateToken(token);
+            boolean isValid = jwtUtil.validateRefreshToken(token);
 
             // then
             assertTrue(isValid);
@@ -83,7 +84,7 @@ class JwtUtilTest implements UserFixture {
             String invalidToken = "invalid-token";
 
             // when
-            boolean isValid = jwtUtil.validateToken(invalidToken);
+            boolean isValid = jwtUtil.validateRefreshToken(invalidToken);
 
             // then
             assertFalse(isValid);
