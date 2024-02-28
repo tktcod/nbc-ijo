@@ -1,5 +1,6 @@
 package com.spring.nbcijo.common;
 
+import com.spring.nbcijo.dto.request.PostRequestDto;
 import com.spring.nbcijo.entity.Post;
 
 public interface PostFixture extends UserFixture {
@@ -18,5 +19,15 @@ public interface PostFixture extends UserFixture {
         .title(ANOTHER_PREFIX + TEST_POST_TITLE)
         .content(ANOTHER_PREFIX + TEST_POST_CONTENT)
         .user(TEST_ANOTHER_USER)
+        .build();
+
+    PostRequestDto TEST_POST_REQUEST_DTO = PostRequestDto.builder()
+        .title(TEST_POST_TITLE)
+        .content(TEST_POST_CONTENT)
+        .build();
+
+    PostRequestDto TEST_ANOTHER_POST_REQUEST_DTO = PostRequestDto.builder()
+        .title(ANOTHER_PREFIX + TEST_POST_TITLE)
+        .content(ANOTHER_PREFIX + TEST_POST_CONTENT)
         .build();
 }
