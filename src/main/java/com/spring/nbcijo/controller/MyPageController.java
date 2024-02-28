@@ -4,6 +4,7 @@ import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
+import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.MyPageService;
@@ -59,6 +60,16 @@ public class MyPageController {
                 .statusCode(HttpStatus.OK.value())
                 .message("비밀 번호 변경 완료")
                 .build());
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<PostResponseDto> myPostResponseDtos = myPageService.getMyPosts(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<PostResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("내 정보 조회가 완료되었습니다.")
+                .data(myPostResponseDtos).build());
     }
 
     @GetMapping("/comments")

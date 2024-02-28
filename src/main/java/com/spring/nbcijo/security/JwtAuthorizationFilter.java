@@ -1,5 +1,6 @@
 package com.spring.nbcijo.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.nbcijo.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -7,7 +8,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -31,26 +37,76 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
         FilterChain filterChain) throws ServletException, IOException {
 
+        // 로그인 및 회원가입 인증 예외 처리
+        String method = req.getMethod();
+        String requestURI = req.getRequestURI();
+
+        List<String> exemptedUrls = Arrays.asList(
+            "/auth/login",
+            "/auth/signup"
+        );
+
+        if (exemptedUrls.contains(requestURI)) {
+            // exemptedUrls에 포함된 주소로 요청된 경우
+            filterChain.doFilter(req, res); // 다음 필터로 요청 전달
+            return;
+        }
+
+        if ("GET".equals(method) && !requestURI.startsWith("/my")) {
+            // GET 요청이이고 프로필조회 기능이 아닌경우
+            filterChain.doFilter(req, res); // 다음 필터로 요청 전달
+            return;
+        }
+
         String tokenValue = jwtUtil.getJwtFromHeader(req);
-
-        if (StringUtils.hasText(tokenValue)) {
-
-            if (!jwtUtil.validateToken(tokenValue)) {
-                log.error("Token Error");
+        // Access 토큰 유효성 검사, 만료된 토큰일 경우 다음 조건문 실행
+        if (!StringUtils.hasText(tokenValue) || !jwtUtil.validateAccessToken(tokenValue)) {
+            log.error("AccessToken이 유효하지 않습니다");
+            sendErrorResponse(res, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+            return;
+        }
+        // 만료된 토큰일 경우 RefreshToken 검사
+        if (jwtUtil.isAccessTokenExpired(tokenValue)) {
+            // RefreshToken을 쿠키에서 추출 후 유효성 검사
+            String refreshTokenValue = jwtUtil.getRefreshTokenFromCookie(req);
+            // 토큰이 없거나 유효하지 않으면 에러 반환
+            if (!StringUtils.hasText(refreshTokenValue) || !jwtUtil.validateToken(
+                refreshTokenValue)) {
+                log.error("RefreshToken이 유효하지 않습니다.");
+                sendErrorResponse(res, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
                 return;
             }
 
-            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+            // 새로운 accessToken 생성
+            log.info("새로운 accessToken 생성");
+            String newAccessToken = jwtUtil.generateAccessTokenFromRefreshToken(refreshTokenValue);
+            tokenValue = newAccessToken.substring(7);
+            // 새로운 accessToken을 클라이언트에 반환
+            res.addHeader(JwtUtil.AUTHORIZATION_HEADER, newAccessToken);
+        }
 
-            try {
-                setAuthentication(info.getSubject());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                return;
-            }
+        Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+
+        try {
+            setAuthentication(info.getSubject());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return;
         }
 
         filterChain.doFilter(req, res);
+    }
+
+    // 오류 발생시 에러메세지 전달
+    private void sendErrorResponse(HttpServletResponse res, String errorMessage, HttpStatus status)
+        throws IOException {
+        res.setStatus(status.value());
+        res.setContentType("application/json");
+        res.setCharacterEncoding("UTF-8");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", errorMessage);
+        res.getWriter().write(objectMapper.writeValueAsString(response));
     }
 
     // 인증 처리
