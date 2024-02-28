@@ -81,4 +81,17 @@ class PostServiceTest implements PostFixture {
         assertThat(testPost.getTitle()).isEqualTo("updateTitle");
         assertThat(testPost.getContent()).isEqualTo("updateContent");
     }
+
+    @DisplayName("게시글 삭제")
+    @Test
+    void deletePost() {
+        // given
+        ReflectionTestUtils.setField(TEST_USER, User.class, "id", TEST_USER_ID, Long.class);
+        var testPost = TEST_POST;
+        given(postRepository.findById(TEST_POST_ID)).willReturn(Optional.of(testPost));
+
+        // when & given
+        assertDoesNotThrow(() ->
+            postService.deletePost(TEST_POST_ID, TEST_USER));
+    }
 }
