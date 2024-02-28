@@ -3,6 +3,12 @@ package com.spring.nbcijo.service;
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
+import com.spring.nbcijo.dto.response.PostResponseDto;
+import com.spring.nbcijo.entity.Post;
+import com.spring.nbcijo.entity.User;
+import com.spring.nbcijo.global.enumeration.ErrorCode;
+import com.spring.nbcijo.global.exception.InvalidInputException;
+import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.entity.Comment;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
@@ -21,6 +27,7 @@ import org.springframework.stereotype.Service;
 public class MyPageService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -48,6 +55,13 @@ public class MyPageService {
         }
     }
 
+    public List<PostResponseDto> getMyPosts(User user) {
+        List<Post> postList = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
+        List<PostResponseDto> postListToDtos = postList.stream().map(PostResponseDto::new).collect(
+            Collectors.toList());
+        return postListToDtos;
+    }
+  
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
         List<CommentResponseDto> listToDtos = list.stream().map(CommentResponseDto::new).collect(
