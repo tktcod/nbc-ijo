@@ -3,9 +3,13 @@ package com.spring.nbcijo.dto.response;
 
 import com.spring.nbcijo.entity.Post;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class PostResponseDto {
 
     private Long id;
