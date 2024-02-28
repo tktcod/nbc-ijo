@@ -13,7 +13,8 @@ public enum ErrorCode {
     INVALID_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     REUSED_PASSWORD(BAD_REQUEST, "사용 전적이 있는 비밀번호 입니다."),
     NOT_VALID_USER(BAD_REQUEST, "작성자가 아닙니다"),
-    NOT_VALID_POST(BAD_REQUEST, "유효한 게시글이 아닙니다");
+    NOT_VALID_POST(BAD_REQUEST, "유효한 게시글이 아닙니다"),
+    NOT_VALID_ADMIN_TOKEN(BAD_REQUEST, "유효한 관리자 토큰이 아닙니다");
 
     private final HttpStatus status;
     private final String message;

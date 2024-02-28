@@ -5,18 +5,15 @@ import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
-import com.spring.nbcijo.entity.Post;
-import com.spring.nbcijo.entity.User;
-import com.spring.nbcijo.global.enumeration.ErrorCode;
-import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.entity.Comment;
 import com.spring.nbcijo.entity.PasswordHistory;
+import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
+import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -90,7 +87,7 @@ public class MyPageService {
             Collectors.toList());
         return postListToDtos;
     }
-  
+
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
         List<CommentResponseDto> listToDtos = list.stream().map(CommentResponseDto::new).collect(

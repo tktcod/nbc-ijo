@@ -2,6 +2,7 @@ package com.spring.nbcijo.config;
 
 import com.spring.nbcijo.jwt.JwtUtil;
 import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
+import com.spring.nbcijo.security.AdminAuthenticationFilter;
 import com.spring.nbcijo.security.JwtAuthenticationFilter;
 import com.spring.nbcijo.security.JwtAuthorizationFilter;
 import com.spring.nbcijo.security.UserDetailsServiceImpl;
@@ -48,6 +49,13 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public AdminAuthenticationFilter adminAuthenticationFilter() throws Exception {
+        AdminAuthenticationFilter filter = new AdminAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+        return filter;
+    }
+
+    @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService,
             refreshTokenBlacklistRepository);
@@ -78,6 +86,7 @@ public class WebSecurityConfig {
         );
 
         // 필터 관리
+        http.addFilterBefore(adminAuthenticationFilter(), AdminAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
