@@ -1,6 +1,7 @@
 package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
@@ -38,11 +39,27 @@ public class MyPageController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateMyDescription(
+    public ResponseEntity<ResponseDto<Void>> updateMyDescription(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
         myPageService.updateMyDescription(userDetails.getUser(), updateDescriptionRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResponseDto.<Void>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("한 줄 소개 수정 완료")
+                .build());
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<ResponseDto<Void>> updateMyPassword(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto) {
+        myPageService.updateMyPassword(userDetails.getUser(), updatePasswordRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResponseDto.<Void>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("비밀 번호 변경 완료")
+                .build());
     }
 
     @GetMapping("/posts")
@@ -56,8 +73,10 @@ public class MyPageController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getMyComments(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<CommentResponseDto> myCommentsResponseDtos= myPageService.getMyComments(userDetails.getUser());
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getMyComments(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CommentResponseDto> myCommentsResponseDtos = myPageService.getMyComments(
+            userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<List<CommentResponseDto>>builder()
                 .statusCode(HttpStatus.OK.value())

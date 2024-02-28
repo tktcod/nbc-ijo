@@ -43,7 +43,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(User user, Long postId, Long commentId, CommentRequestDto requestDto) {
+    public void updateComment(User user, Long postId, Long commentId,
+        CommentRequestDto requestDto) {
         findPost(postId);
         Comment comment = findComment(commentId);
 

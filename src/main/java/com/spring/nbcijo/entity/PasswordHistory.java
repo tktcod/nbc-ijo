@@ -12,10 +12,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Getter
+@NoArgsConstructor
 @Table(name = "password_history")
 @EntityListeners(AuditingEntityListener.class)
 public class PasswordHistory {
@@ -35,4 +40,19 @@ public class PasswordHistory {
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+
+    @Builder
+    public PasswordHistory(User user, String password, LocalDateTime createdAt) {
+        this.user = user;
+        this.password = password;
+        this.createdAt = createdAt;
+    }
+
+    public PasswordHistory toPasswordHistory(User user, String password) {
+        return PasswordHistory.builder()
+            .user(user)
+            .password(password)
+            .createdAt(LocalDateTime.now())
+            .build();
+    }
 }
