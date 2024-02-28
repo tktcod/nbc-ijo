@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,5 +50,20 @@ public class UserController {
             .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto<String>> logout(
+        @CookieValue(value = "refreshToken", defaultValue = "") String refreshToken) {
+        if (refreshToken.isEmpty()) {
+            throw new IllegalArgumentException("로그아웃 실패 : Refresh Token을 찾을 수 없습니다.");
+        }
+
+        userService.logout(refreshToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<String>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("로그아웃이 완료되었습니다.")
+            .build());
     }
 }

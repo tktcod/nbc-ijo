@@ -1,6 +1,7 @@
 package com.spring.nbcijo.config;
 
 import com.spring.nbcijo.jwt.JwtUtil;
+import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.security.JwtAuthenticationFilter;
 import com.spring.nbcijo.security.JwtAuthorizationFilter;
 import com.spring.nbcijo.security.UserDetailsServiceImpl;
@@ -25,6 +26,7 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final RefreshTokenBlacklistRepository refreshTokenBlacklistRepository;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -47,7 +49,8 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService,
+            refreshTokenBlacklistRepository);
     }
 
     @Bean

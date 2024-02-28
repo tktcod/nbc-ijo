@@ -2,6 +2,7 @@ package com.spring.nbcijo.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.nbcijo.jwt.JwtUtil;
+import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,10 +28,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final RefreshTokenBlacklistRepository refreshTokenBlacklistRepository;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService,
+        RefreshTokenBlacklistRepository refreshTokenBlacklistRepository) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.refreshTokenBlacklistRepository = refreshTokenBlacklistRepository;
     }
 
     @Override
@@ -43,7 +47,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         List<String> exemptedUrls = Arrays.asList(
             "/auth/login",
-            "/auth/signup"
+            "/auth/signup",
+            "/auth/logout"
         );
 
         if (exemptedUrls.contains(requestURI)) {
@@ -70,10 +75,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             // RefreshToken을 쿠키에서 추출 후 유효성 검사
             String refreshTokenValue = jwtUtil.getRefreshTokenFromCookie(req);
             // 토큰이 없거나 유효하지 않으면 에러 반환
-            if (!StringUtils.hasText(refreshTokenValue) || !jwtUtil.validateToken(
+            if (!StringUtils.hasText(refreshTokenValue) || !jwtUtil.validateRefreshToken(
                 refreshTokenValue)) {
                 log.error("RefreshToken이 유효하지 않습니다.");
                 sendErrorResponse(res, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+                return;
+            }
+
+            // 토큰이 블랙리스트에 있는지 확인
+            if (isTokenInBlacklist(refreshTokenValue)) {
+                log.error("RefreshToken이 블랙리스트에 등록되어 있습니다.");
+                sendErrorResponse(res, "로그아웃된 토큰입니다.", HttpStatus.UNAUTHORIZED);
                 return;
             }
 
@@ -123,5 +135,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null,
             userDetails.getAuthorities());
+    }
+
+    // Refresh Token으로 Access Token 재발급 전 Refresh Token 블랙리스트 확인
+    private boolean isTokenInBlacklist(String refreshTokenValue) {
+        return refreshTokenBlacklistRepository.existsByRefreshToken(refreshTokenValue);
     }
 }
