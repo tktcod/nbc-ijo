@@ -1,12 +1,15 @@
 package com.spring.nbcijo.dto.response;
 
+import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class MyInformResponseDto {
 
     private Long id;
@@ -15,10 +18,10 @@ public class MyInformResponseDto {
     private String description;
 
     @Builder
-    public MyInformResponseDto(Long id, String username, UserRoleEnum role, String description) {
-        this.id = id;
-        this.username = username;
-        this.role = role;
-        this.description = description;
+    public MyInformResponseDto(User user){
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.role = user.getRole();
+        this.description = user.getDescription();
     }
 }

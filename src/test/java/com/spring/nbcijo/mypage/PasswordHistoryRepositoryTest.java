@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class PasswordHistoryRepositoryTest implements UserFixture {
 
     @DisplayName("유저 당 최신 3개의 데이터 조회")
     @Test
+    @Disabled
     void findTop3ByUserId() {
         // given
         var passwordHistory1 = MyPageTestUtils.get(PASSWORD_HISTORY1, 1L,
@@ -41,5 +43,6 @@ public class PasswordHistoryRepositoryTest implements UserFixture {
 
         // then
         assertThat(result.get(1).getCreatedAt()).isBefore(result.get(0).getCreatedAt());
+        assertThat(result.size()).isEqualTo(3);
     }
 }

@@ -7,6 +7,8 @@ import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface UserFixture {
 
@@ -18,6 +20,7 @@ public interface UserFixture {
     Long TEST_ANOTHER_USER_ID = 2L;
     String TEST_USER_NAME = "username";
     String TEST_USER_PASSWORD = "password";
+    String TEST_USER_PASSWORD_FAIL = "fail-"+TEST_USER_PASSWORD;
     String TEST_USER_DESCRIPTION = "default message";
     String TEST_USER_UPDATE_DESCRIPTION = "update message";
     String TEST_NEW_PASSWORD = "newPw123!";
@@ -61,11 +64,9 @@ public interface UserFixture {
         .password(TEST_NEW_PASSWORD)
         .build();
 
+    List<PasswordHistory> PASSWORD_HISTORY_LIST = new ArrayList<>();
     MyInformResponseDto TEST_USER_RESPONSE = MyInformResponseDto.builder()
-        .id(TEST_USER_ID)
-        .username(TEST_USER_NAME)
-        .role(UserRoleEnum.USER)
-        .description(TEST_USER_DESCRIPTION)
+        .user(TEST_USER)
         .build();
 
     UpdateDescriptionRequestDto TEST_DESCRIPTION_UPDATE_REQUEST = new UpdateDescriptionRequestDto(

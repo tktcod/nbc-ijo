@@ -36,11 +36,7 @@ public class MyPageService {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
         return MyInformResponseDto.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .role(user.getRole())
-            .description(user.getDescription())
-            .build();
+            .user(user).build();
     }
 
     @Transactional
