@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserFixture {
 
     String ANOTHER_PREFIX = "another-";
-    String REPOSITORY_PREFIX = "repository-";
+    String REPOSITORY_PREFIX = "r";
     Long TEST_USER_ID = 1L;
 
     Long TEST_FAIL_USER_ID = 0L;
