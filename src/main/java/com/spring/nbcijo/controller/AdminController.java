@@ -26,6 +26,7 @@ public class AdminController {
     @PostMapping("/admin/register")
     public ResponseEntity<ResponseDto<Void>> registerAdmin(
         @RequestBody @Valid AdminRegisterRequestDto requestDto) {
+        log.info("iin");
         adminService.register(requestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<Void>builder()
