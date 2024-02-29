@@ -1,9 +1,9 @@
 package com.spring.nbcijo.common;
 
-import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
-import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.request.LoginRequestDto;
 import com.spring.nbcijo.dto.request.SignupRequestDto;
+import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
+import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.User;
@@ -22,11 +22,11 @@ public interface UserFixture {
     Long TEST_ANOTHER_USER_ID = 2L;
     String TEST_USER_NAME = "username";
 
-    String TEST_USER_PASSWORD_FAIL = "fail-"+TEST_USER_PASSWORD;
     String TEST_USER_UPDATE_DESCRIPTION = "update message";
     String TEST_NEW_PASSWORD = "newPw123!";
     String TEST_NEW_PASSWORD_FAIL = "newPw123";
     String TEST_USER_PASSWORD = "Dd1@Dd1@";
+    String TEST_USER_PASSWORD_FAIL = "fail-" + TEST_USER_PASSWORD;
     String TEST_USER_DESCRIPTION = "default message";
     UserRoleEnum TEST_USER_ROLE = UserRoleEnum.USER;
 
@@ -66,13 +66,6 @@ public interface UserFixture {
         .description(TEST_USER_DESCRIPTION)
         .build();
 
-    MyInformResponseDto TEST_USER_RESPONSE = MyInformResponseDto.builder()
-        .id(TEST_USER_ID)
-        .username(TEST_USER_NAME)
-
-        .role(UserRoleEnum.USER)
-        .description(REPOSITORY_PREFIX + TEST_USER_DESCRIPTION)
-        .build();
 
     PasswordHistory PASSWORD_HISTORY1 = PasswordHistory.builder()
         .createdAt(LocalDateTime.now())

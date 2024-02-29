@@ -2,7 +2,6 @@ package com.spring.nbcijo.mypage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -13,8 +12,6 @@ import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.entity.User;
-import com.spring.nbcijo.global.enumeration.ErrorCode;
-import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.PostRepository;
@@ -28,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -73,7 +69,8 @@ class MyPageServiceTest implements UserFixture, PostFixture, CommentFixture {
         // given
 //        ReflectionTestUtils.setField(TEST_USER2, User.class, "id", TEST_USER_ID, Long.class);
         var testUser = MyPageTestUtils.get(TEST_USER);
-        var requestDto = new UpdateDescriptionRequestDto(TEST_USER_PASSWORD, TEST_DESCRIPTION_UPDATE_REQUEST.getUpdateDescription());
+        var requestDto = new UpdateDescriptionRequestDto(TEST_USER_PASSWORD,
+            TEST_DESCRIPTION_UPDATE_REQUEST.getUpdateDescription());
         given(userRepository.findById(any())).willReturn(
             Optional.of(testUser));
 
@@ -83,7 +80,7 @@ class MyPageServiceTest implements UserFixture, PostFixture, CommentFixture {
 
         // when - then
         assertDoesNotThrow(() ->
-            myPageService.updateMyDescription(TEST_USER,requestDto));
+            myPageService.updateMyDescription(TEST_USER, requestDto));
     }
 
     @Disabled
@@ -102,7 +99,7 @@ class MyPageServiceTest implements UserFixture, PostFixture, CommentFixture {
 
         // then
         assertDoesNotThrow(() ->
-            myPageService.updateMyPassword(TEST_USER,TEST_PASSWORD_UPDATE_REQUEST));
+            myPageService.updateMyPassword(TEST_USER, TEST_PASSWORD_UPDATE_REQUEST));
     }
 
     @Disabled
