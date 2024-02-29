@@ -36,11 +36,7 @@ public class MyPageService {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
         return MyInformResponseDto.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .role(user.getRole())
-            .description(user.getDescription())
-            .build();
+            .user(user).build();
     }
 
     @Transactional
@@ -83,16 +79,14 @@ public class MyPageService {
 
     public List<PostResponseDto> getMyPosts(User user) {
         List<Post> postList = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-        List<PostResponseDto> postListToDtos = postList.stream().map(PostResponseDto::new).collect(
+        return postList.stream().map(PostResponseDto::new).collect(
             Collectors.toList());
-        return postListToDtos;
     }
 
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-        List<CommentResponseDto> listToDtos = list.stream().map(CommentResponseDto::new).collect(
+        return list.stream().map(CommentResponseDto::new).collect(
             Collectors.toList());
-        return listToDtos;
     }
 
     private boolean isPasswordMatches(String passwordInDB, String inputPassword) {
@@ -101,15 +95,14 @@ public class MyPageService {
 
     private boolean isPasswordPreviouslyUsed(User user,
         UpdatePasswordRequestDto updatePasswordRequestDto) {
-        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(
+        List<PasswordHistory> passwordList = passwordHistoryRepository.findTop3ByUserIdOrderByCreatedAtDesc(
             user.getId());
-        int count = 0;
         for (PasswordHistory password : passwordList) {
             if (isPasswordMatches(password.getPassword(),
                 updatePasswordRequestDto.getNewPassword())) {
-                count = count + 1;
+                return false;
             }
         }
-        return count == 0;
+        return true;
     }
 }

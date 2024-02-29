@@ -16,11 +16,21 @@ public interface PostFixture extends UserFixture {
         .user(TEST_USER)
         .build();
 
+    Post TEST_POST2 = Post.builder()
+        .title(TEST_POST_TITLE)
+        .content(TEST_POST_CONTENT)
+        .user(TEST_USER)
+        .build();
+  
     Post TEST_ANOTHER_POST = Post.builder()
         .title(ANOTHER_PREFIX + TEST_POST_TITLE)
         .content(ANOTHER_PREFIX + TEST_POST_CONTENT)
         .user(TEST_ANOTHER_USER)
         .build();
+
+
+    PostResponseDto postResponseDto1 = new PostResponseDto(TEST_POST);
+    PostResponseDto postResponseDto2 = new PostResponseDto(TEST_POST2);
 
     PostRequestDto TEST_POST_REQUEST_DTO = PostRequestDto.builder()
         .title(TEST_POST_TITLE)

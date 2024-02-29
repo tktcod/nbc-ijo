@@ -50,7 +50,8 @@ public class UserServiceIntegrationTest implements UserFixture {
         //then
         var found = userRepository.findByUsername(requestDto.getUsername());
         var foundId = found.get().getId();
-        var passwordHistory = passwordHistoryRepository.findTop3ByUserIdOrderByIdDesc(foundId);
+        var passwordHistory = passwordHistoryRepository.findTop3ByUserIdOrderByCreatedAtDesc(
+            foundId);
 
         assertThat(found).isNotEmpty();
         assertThat(found.get().getUsername()).isEqualTo(requestDto.getUsername());
