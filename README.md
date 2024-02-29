@@ -16,6 +16,7 @@
 - Spring Boot
 - Spring Security
 - DATA JPA
+- Github Actions
 
 ## 구현 목표
 
