@@ -3,10 +3,12 @@ package com.spring.nbcijo.dto.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class SignupRequestDto {
 
     @NotNull

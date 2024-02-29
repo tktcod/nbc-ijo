@@ -1,13 +1,16 @@
 package com.spring.nbcijo.dto.request;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class AdminLoginRequestDto {
 
-    @NotNull
+    @NotBlank
     private String adminName;
-    @NotNull
+    @NotBlank
     private String password;
 }
+

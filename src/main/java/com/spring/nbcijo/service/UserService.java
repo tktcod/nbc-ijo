@@ -1,15 +1,14 @@
 package com.spring.nbcijo.service;
 
 import com.spring.nbcijo.dto.request.SignupRequestDto;
-
-import com.spring.nbcijo.entity.RefreshTokenBlacklist;
-import com.spring.nbcijo.jwt.JwtUtil;
-import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.entity.PasswordHistory;
+import com.spring.nbcijo.entity.RefreshTokenBlacklist;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.entity.UserRoleEnum;
 import com.spring.nbcijo.global.exception.DuplicateUsernameException;
+import com.spring.nbcijo.jwt.JwtUtil;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
+import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -53,7 +52,6 @@ public class UserService {
             .createdAt(LocalDateTime.now())
             .build();
         passwordHistoryRepository.save(passwordHistory);
-
     }
 
     public void logout(String refreshToken) {

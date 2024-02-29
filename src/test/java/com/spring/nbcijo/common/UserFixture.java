@@ -2,6 +2,8 @@ package com.spring.nbcijo.common;
 
 import com.spring.nbcijo.dto.request.UpdateDescriptionRequestDto;
 import com.spring.nbcijo.dto.request.UpdatePasswordRequestDto;
+import com.spring.nbcijo.dto.request.LoginRequestDto;
+import com.spring.nbcijo.dto.request.SignupRequestDto;
 import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.User;
@@ -19,17 +21,21 @@ public interface UserFixture {
     Long TEST_FAIL_USER_ID = 0L;
     Long TEST_ANOTHER_USER_ID = 2L;
     String TEST_USER_NAME = "username";
-    String TEST_USER_PASSWORD = "password";
+
     String TEST_USER_PASSWORD_FAIL = "fail-"+TEST_USER_PASSWORD;
-    String TEST_USER_DESCRIPTION = "default message";
     String TEST_USER_UPDATE_DESCRIPTION = "update message";
     String TEST_NEW_PASSWORD = "newPw123!";
     String TEST_NEW_PASSWORD_FAIL = "newPw123";
+    String TEST_USER_PASSWORD = "Dd1@Dd1@";
+    String TEST_USER_DESCRIPTION = "default message";
+    UserRoleEnum TEST_USER_ROLE = UserRoleEnum.USER;
+
 
     User TEST_USER = User.builder()
         .username(TEST_USER_NAME)
         .password(TEST_USER_PASSWORD)
         .description(TEST_USER_DESCRIPTION)
+
         .role(UserRoleEnum.USER)
         .build();
 
@@ -39,9 +45,29 @@ public interface UserFixture {
         .description(TEST_USER_DESCRIPTION)
         .build();
 
+
     User TEST_REPOSITORY_USER = User.builder()
         .username(REPOSITORY_PREFIX + TEST_USER_NAME)
         .password(REPOSITORY_PREFIX + TEST_USER_PASSWORD)
+
+    SignupRequestDto TEST_SIGN_UP_REQUEST_DTO = SignupRequestDto.builder()
+        .username(TEST_USER_NAME)
+        .password(TEST_USER_PASSWORD)
+        .passwordConfirm(TEST_USER_PASSWORD)
+        .description(TEST_USER_DESCRIPTION)
+        .build();
+
+    SignupRequestDto TEST_ANOTHER_SIGN_UP_REQUEST_DTO = SignupRequestDto.builder()
+        .username("userid")
+        .password(TEST_USER_PASSWORD)
+        .passwordConfirm(TEST_USER_PASSWORD)
+        .description(TEST_USER_DESCRIPTION)
+        .build();
+
+    MyInformResponseDto TEST_USER_RESPONSE = MyInformResponseDto.builder()
+        .id(TEST_USER_ID)
+        .username(TEST_USER_NAME)
+
         .role(UserRoleEnum.USER)
         .description(REPOSITORY_PREFIX + TEST_USER_DESCRIPTION)
         .build();
@@ -77,4 +103,9 @@ public interface UserFixture {
 
     UpdatePasswordRequestDto TEST_PASSWORD_UPDATE_REQUEST_FAIL = new UpdatePasswordRequestDto(
         TEST_USER_PASSWORD, TEST_NEW_PASSWORD_FAIL);
+
+    LoginRequestDto TEST_LOGIN_REQUEST_DTO = LoginRequestDto.builder()
+        .username(TEST_USER_NAME)
+        .password(TEST_USER_PASSWORD)
+        .build();
 }
