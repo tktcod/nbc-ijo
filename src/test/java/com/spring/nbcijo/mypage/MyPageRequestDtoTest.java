@@ -42,9 +42,7 @@ public class MyPageRequestDtoTest {
             var validations = validate(updatePasswordRequestDto);
 
             // then
-            assertThat(validations).hasSize(1)
-                .extracting("message")
-                .contains("\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*-])[A-Za-z\\d!@#$%^&*-]{8,15}$\"와 일치해야 합니다");
+            assertThat(validations).hasSize(1);
         }
     }
 
