@@ -8,6 +8,7 @@ import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
 import com.spring.nbcijo.service.MyPageService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class MyPageController {
     @PutMapping
     public ResponseEntity<ResponseDto<Void>> updateMyDescription(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
+        @Valid @RequestBody UpdateDescriptionRequestDto updateDescriptionRequestDto) {
         myPageService.updateMyDescription(userDetails.getUser(), updateDescriptionRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResponseDto.<Void>builder()
