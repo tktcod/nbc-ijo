@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.jwt.JwtUtil;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,7 +45,6 @@ public class JwtAuthenticationFilterTest implements UserFixture {
             .content(objectMapper.writeValueAsString(TEST_LOGIN_REQUEST_DTO))
             .accept(MediaType.APPLICATION_JSON));
 
-        //then
         actions.andExpect(header().exists(HttpHeaders.AUTHORIZATION));
     }
 
