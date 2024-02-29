@@ -49,6 +49,8 @@ public interface UserFixture {
     User TEST_REPOSITORY_USER = User.builder()
         .username(REPOSITORY_PREFIX + TEST_USER_NAME)
         .password(REPOSITORY_PREFIX + TEST_USER_PASSWORD)
+        .description(TEST_USER_DESCRIPTION)
+        .build();
 
     SignupRequestDto TEST_SIGN_UP_REQUEST_DTO = SignupRequestDto.builder()
         .username(TEST_USER_NAME)
