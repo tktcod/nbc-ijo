@@ -9,6 +9,7 @@ import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
+import com.spring.nbcijo.service.contracts.CommentService;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
+    @Override
     @Transactional
     public void createComment(User user, Long postId, CommentRequestDto requestDto) {
         Post post = findPost(postId);
@@ -34,6 +36,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    @Override
     public List<CommentResponseDto> getComments(Long postId) {
         findPost(postId);
         List<Comment> comments = commentRepository.findAllByPostIdOrderByCreatedAtDesc(postId);
@@ -42,6 +45,7 @@ public class CommentService {
             .toList();
     }
 
+    @Override
     @Transactional
     public void updateComment(User user, Long postId, Long commentId,
         CommentRequestDto requestDto) {
@@ -53,6 +57,7 @@ public class CommentService {
         comment.update(requestDto);
     }
 
+    @Override
     @Transactional
     public void deleteComment(User user, Long postId, Long commentId) {
         findPost(postId);

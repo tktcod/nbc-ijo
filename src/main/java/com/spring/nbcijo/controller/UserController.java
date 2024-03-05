@@ -2,7 +2,7 @@ package com.spring.nbcijo.controller;
 
 import com.spring.nbcijo.dto.request.SignupRequestDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
-import com.spring.nbcijo.service.UserService;
+import com.spring.nbcijo.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping("/login-page")
     public String loginPage() {

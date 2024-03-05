@@ -14,7 +14,7 @@ import com.spring.nbcijo.common.ControllerTest;
 import com.spring.nbcijo.common.PostFixture;
 import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.controller.MyPageController;
-import com.spring.nbcijo.service.MyPageService;
+import com.spring.nbcijo.service.MyPageServiceImpl;
 import java.security.Principal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class MyPageControllerTest extends ControllerTest implements UserFixture, PostFi
     CommentFixture {
 
     @MockBean
-    MyPageService myPageService;
+    MyPageServiceImpl myPageService;
     private Principal mockPrincipal;
 
     @Test

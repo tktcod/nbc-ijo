@@ -4,7 +4,7 @@ import com.spring.nbcijo.dto.request.PostRequestDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
-import com.spring.nbcijo.service.PostService;
+import com.spring.nbcijo.service.PostServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/posts")
 public class PostController {
 
-    private final PostService postService;
+    private final PostServiceImpl postService;
 
     @PostMapping
     public ResponseEntity<ResponseDto<PostResponseDto>> createPost(@Valid @RequestBody

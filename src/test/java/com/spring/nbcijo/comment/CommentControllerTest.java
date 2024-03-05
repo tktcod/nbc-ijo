@@ -24,7 +24,7 @@ import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.service.CommentServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hamcrest.Matchers;
@@ -40,7 +40,7 @@ public class CommentControllerTest extends ControllerTest implements CommentFixt
     UserFixture {
 
     @MockBean
-    private CommentService commentService;
+    private CommentServiceImpl commentService;
 
     @Nested
     @DisplayName("댓글 생성 요청")

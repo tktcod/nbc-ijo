@@ -4,7 +4,7 @@ import com.spring.nbcijo.dto.request.CommentRequestDto;
 import com.spring.nbcijo.dto.response.CommentResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
-import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.service.CommentServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ResponseDto<Void>> createComment(
