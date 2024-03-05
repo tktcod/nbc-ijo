@@ -16,7 +16,7 @@ import com.spring.nbcijo.entity.Comment;
 import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
-import com.spring.nbcijo.service.CommentService;
+import com.spring.nbcijo.service.CommentServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class CommentServiceTest implements CommentFixture, PostFixture {
 
     @InjectMocks
-    CommentService commentService;
+    CommentServiceImpl commentService;
 
     @Mock
     CommentRepository commentRepository;

@@ -12,7 +12,7 @@ import com.spring.nbcijo.common.ControllerTest;
 import com.spring.nbcijo.controller.UserController;
 import com.spring.nbcijo.dto.request.SignupRequestDto;
 import com.spring.nbcijo.global.exception.DuplicateUsernameException;
-import com.spring.nbcijo.service.UserService;
+import com.spring.nbcijo.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 public class UserControllerTest extends ControllerTest {
 
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Nested
     @DisplayName("회원가입 요청")

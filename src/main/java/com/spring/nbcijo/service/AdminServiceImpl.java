@@ -8,6 +8,7 @@ import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.DuplicateUsernameException;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.UserRepository;
+import com.spring.nbcijo.service.contracts.AdminService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class AdminService {
+public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -25,6 +26,7 @@ public class AdminService {
     @Value("${admin.token}")
     private String ADMIN_TOKEN;
 
+    @Override
     public void register(AdminRegisterRequestDto requestDto) {
         String adminName = requestDto.getAdminName();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -40,6 +42,7 @@ public class AdminService {
         userRepository.save(user);
     }
 
+    @Override
     public List<UserResponseDto> getAllUsers() {
         List<User> all = userRepository.findAll();
         return all.stream()

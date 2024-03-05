@@ -16,7 +16,7 @@ import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
-import com.spring.nbcijo.service.MyPageService;
+import com.spring.nbcijo.service.MyPageServiceImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class MyPageServiceTest implements UserFixture, PostFixture, CommentFixture {
 
     @InjectMocks
-    MyPageService myPageService;
+    MyPageServiceImpl myPageService;
 
     @Mock
     UserRepository userRepository;

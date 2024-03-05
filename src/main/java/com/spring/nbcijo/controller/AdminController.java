@@ -3,7 +3,7 @@ package com.spring.nbcijo.controller;
 import com.spring.nbcijo.dto.request.AdminRegisterRequestDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.dto.response.UserResponseDto;
-import com.spring.nbcijo.service.AdminService;
+import com.spring.nbcijo.service.AdminServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AdminController {
 
-    private final AdminService adminService;
+    private final AdminServiceImpl adminService;
 
     @PostMapping("/admin/register")
     public ResponseEntity<ResponseDto<Void>> registerAdmin(

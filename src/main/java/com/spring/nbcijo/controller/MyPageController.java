@@ -7,7 +7,7 @@ import com.spring.nbcijo.dto.response.MyInformResponseDto;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.dto.response.ResponseDto;
 import com.spring.nbcijo.security.UserDetailsImpl;
-import com.spring.nbcijo.service.MyPageService;
+import com.spring.nbcijo.service.MyPageServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/my")
 public class MyPageController {
 
-    private final MyPageService myPageService;
+    private final MyPageServiceImpl myPageService;
 
     @GetMapping
     public ResponseEntity<ResponseDto<MyInformResponseDto>> getMyInform(@AuthenticationPrincipal
