@@ -55,8 +55,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPostListWithPaging(Integer page,Integer size) {
-        return postRepository.getPostListWithPaging(page, size);
+    public List<PostResponseDto> getPostListWithPaging(Integer page,Integer size, String search) {
+        return postRepository.getPostListWithPaging(page, size, search);
     }
 
     @Override

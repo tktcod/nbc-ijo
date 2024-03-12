@@ -13,7 +13,7 @@ public interface PostService {
 
     public List<PostResponseDto> getPostList();
 
-    public List<PostResponseDto> getPostListWithPaging(Integer page, Integer size);
+    public List<PostResponseDto> getPostListWithPaging(Integer page, Integer size, String search);
 
     public void updatePost(Long postId, PostRequestDto requestDto, User user);
 

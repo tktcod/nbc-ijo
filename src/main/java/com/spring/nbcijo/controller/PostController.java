@@ -68,9 +68,10 @@ public class PostController {
     @GetMapping("/page")
     public ResponseEntity<ResponseDto<List<PostResponseDto>>> getPostListWithPaging(
         @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-        @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
+        @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+        @RequestParam(value = "search", required = false, defaultValue = "") String search
     ) {
-        List<PostResponseDto> response = postService.getPostListWithPaging(page, size);
+        List<PostResponseDto> response = postService.getPostListWithPaging(page, size, search);
 
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(ResponseDto.<List<PostResponseDto>>builder()
