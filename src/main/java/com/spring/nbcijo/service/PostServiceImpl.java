@@ -55,6 +55,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostResponseDto> getPostListWithPaging(Integer page,Integer size) {
+        List<Post> postList = postRepository.getPostListWithPaging(page, size);
+
+        return postList.stream()
+            .map(PostResponseDto::new)
+            .toList();
+    }
+
+    @Override
     @Transactional
     public void updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post post = findPost(postId);
