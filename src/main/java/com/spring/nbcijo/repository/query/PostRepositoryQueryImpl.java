@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.QPost;
+import com.spring.nbcijo.entity.QUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,10 @@ public class PostRepositoryQueryImpl implements PostRepositoryQuery{
     public List<Post> getPostListWithPaging(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         QPost post = QPost.post;
+        QUser user = QUser.user;
 
         return jpaQueryFactory.selectFrom(post)
+            .leftJoin(post.user, user).fetchJoin()
             .orderBy(post.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
