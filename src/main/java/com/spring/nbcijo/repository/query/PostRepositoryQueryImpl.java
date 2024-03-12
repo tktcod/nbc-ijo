@@ -1,5 +1,6 @@
 package com.spring.nbcijo.repository.query;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spring.nbcijo.dto.response.PostResponseDto;
 import com.spring.nbcijo.entity.Post;
@@ -20,17 +21,21 @@ public class PostRepositoryQueryImpl implements PostRepositoryQuery{
 
 
     @Override
-    public List<Post> getPostListWithPaging(Integer page, Integer size) {
+    public List<PostResponseDto> getPostListWithPaging(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         QPost post = QPost.post;
-        QUser user = QUser.user;
 
-        return jpaQueryFactory.selectFrom(post)
-            .leftJoin(post.user, user).fetchJoin()
+        return jpaQueryFactory
+            .select(Projections.constructor(PostResponseDto.class,
+                post.id,
+                post.title,
+                post.content,
+                post.createdAt,
+                post.modifiedAt))
+            .from(post)
             .orderBy(post.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
-
     }
 }

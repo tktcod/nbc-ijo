@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface PostRepositoryQuery {
 
-    public List<Post> getPostListWithPaging(Integer page, Integer size);
+    public List<PostResponseDto> getPostListWithPaging(Integer page, Integer size);
 }
