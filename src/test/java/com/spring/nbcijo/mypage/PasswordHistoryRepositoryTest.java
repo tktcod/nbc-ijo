@@ -3,6 +3,7 @@ package com.spring.nbcijo.mypage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.spring.nbcijo.common.UserFixture;
+import com.spring.nbcijo.config.JpaConfiguration;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import org.junit.jupiter.api.Disabled;
@@ -10,8 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
+@Import(JpaConfiguration.class)
 public class PasswordHistoryRepositoryTest implements UserFixture {
 
     @Autowired

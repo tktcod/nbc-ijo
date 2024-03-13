@@ -37,6 +37,7 @@ public class UserServiceIntegrationTest implements UserFixture {
     void singUp() {
         //given
         var requestDto = TEST_ANOTHER_SIGN_UP_REQUEST_DTO;
+//        var requestDto = TEST_SIGN_UP_REQUEST_DTO;
 
         //when
         userService.signup(requestDto);
