@@ -2,6 +2,7 @@ package com.spring.nbcijo.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.spring.nbcijo.common.AcceptanceTestExecutionListener;
 import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.jwt.JwtUtil;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
@@ -14,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class UserServiceIntegrationTest implements UserFixture {
 
     @Autowired
@@ -36,8 +39,8 @@ public class UserServiceIntegrationTest implements UserFixture {
     @Test
     void singUp() {
         //given
-        var requestDto = TEST_ANOTHER_SIGN_UP_REQUEST_DTO;
-//        var requestDto = TEST_SIGN_UP_REQUEST_DTO;
+//        var requestDto = TEST_ANOTHER_SIGN_UP_REQUEST_DTO;
+        var requestDto = TEST_SIGN_UP_REQUEST_DTO;
 
         //when
         userService.signup(requestDto);

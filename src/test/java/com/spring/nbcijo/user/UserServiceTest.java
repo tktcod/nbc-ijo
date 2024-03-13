@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.spring.nbcijo.common.AcceptanceTestExecutionListener;
 import com.spring.nbcijo.common.UserFixture;
 import com.spring.nbcijo.entity.PasswordHistory;
 import com.spring.nbcijo.entity.RefreshTokenBlacklist;
@@ -27,8 +28,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestExecutionListeners;
 
 @ExtendWith(MockitoExtension.class)
+@TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class UserServiceTest implements UserFixture {
 
     @InjectMocks
