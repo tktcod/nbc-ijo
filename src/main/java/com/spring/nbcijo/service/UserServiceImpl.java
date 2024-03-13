@@ -11,7 +11,6 @@ import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.repository.UserRepository;
 import com.spring.nbcijo.service.contracts.UserService;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -35,13 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Authentication login(String username, String password) {
-        try {
-            return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password,null)
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        return authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(username, password, null)
+        );
     }
 
     @Override
