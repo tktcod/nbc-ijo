@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final PasswordHistoryRepository passwordHistoryRepository;
+    private final AuthenticationManager authenticationManager;
+
+    @Override
+    public Authentication login(String username, String password) {
+
+        return authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(username, password, null)
+        );
+    }
 
     @Override
     public void signup(SignupRequestDto requestDto) {

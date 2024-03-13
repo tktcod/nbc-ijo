@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.spring.nbcijo.common.CommentFixture;
 import com.spring.nbcijo.common.PostFixture;
+import com.spring.nbcijo.config.JpaConfiguration;
 import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
+@Import(JpaConfiguration.class)
 public class CommentRepositoryTest implements CommentFixture, PostFixture {
 
     @Autowired

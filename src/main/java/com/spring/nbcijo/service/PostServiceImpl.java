@@ -55,6 +55,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostResponseDto> getPostListWithPaging(Integer page,Integer size, String search) {
+        return postRepository.getPostListWithPaging(page, size, search);
+    }
+
+    @Override
     @Transactional
     public void updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post post = findPost(postId);

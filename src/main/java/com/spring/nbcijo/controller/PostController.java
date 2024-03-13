@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,6 +61,22 @@ public class PostController {
             .body(ResponseDto.<List<PostResponseDto>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("게시글 전체 조회 성공")
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<ResponseDto<List<PostResponseDto>>> getPostListWithPaging(
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+        @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+        @RequestParam(value = "search", required = false, defaultValue = "") String search
+    ) {
+        List<PostResponseDto> response = postService.getPostListWithPaging(page, size, search);
+
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(ResponseDto.<List<PostResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("게시글 페이징 조회 성공")
                 .data(response)
                 .build());
     }
