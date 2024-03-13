@@ -12,6 +12,7 @@ import com.spring.nbcijo.common.ControllerTest;
 import com.spring.nbcijo.controller.UserController;
 import com.spring.nbcijo.dto.request.SignupRequestDto;
 import com.spring.nbcijo.global.exception.DuplicateUsernameException;
+import com.spring.nbcijo.jwt.JwtUtil;
 import com.spring.nbcijo.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +20,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
 @WebMvcTest(UserController.class)
+@Import(JwtUtil.class)
 public class UserControllerTest extends ControllerTest {
 
     @MockBean
