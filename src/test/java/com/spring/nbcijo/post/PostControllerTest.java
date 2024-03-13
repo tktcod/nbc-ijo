@@ -22,7 +22,7 @@ import com.spring.nbcijo.dto.request.PostRequestDto;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
-import com.spring.nbcijo.service.PostService;
+import com.spring.nbcijo.service.PostServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ import org.springframework.http.MediaType;
 class PostControllerTest extends ControllerTest implements PostFixture, UserFixture {
 
     @MockBean
-    private PostService postService;
+    private PostServiceImpl postService;
 
     @DisplayName("게시글 생성 요청")
     @Test

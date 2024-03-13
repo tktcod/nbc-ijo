@@ -15,6 +15,7 @@ import com.spring.nbcijo.repository.CommentRepository;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import com.spring.nbcijo.service.contracts.MyPageService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MyPageService {
+public class MyPageServiceImpl implements MyPageService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
@@ -32,6 +33,7 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
     private final PasswordHistoryRepository passwordHistoryRepository;
 
+    @Override
     public MyInformResponseDto getMyInform(User user) {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
@@ -39,6 +41,7 @@ public class MyPageService {
             .user(user).build();
     }
 
+    @Override
     @Transactional
     public void updateMyDescription(User user,
         UpdateDescriptionRequestDto updateDescriptionRequestDto) {
@@ -51,6 +54,7 @@ public class MyPageService {
         }
     }
 
+    @Override
     @Transactional
     public void updateMyPassword(User user, UpdatePasswordRequestDto updatePasswordRequestDto) {
         String encryptNewPassword = passwordEncoder.encode(
@@ -77,12 +81,14 @@ public class MyPageService {
         passwordHistoryRepository.save(newPasswordHistory);
     }
 
+    @Override
     public List<PostResponseDto> getMyPosts(User user) {
         List<Post> postList = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
         return postList.stream().map(PostResponseDto::new).collect(
             Collectors.toList());
     }
 
+    @Override
     public List<CommentResponseDto> getMyComments(User user) {
         List<Comment> list = commentRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
         return list.stream().map(CommentResponseDto::new).collect(

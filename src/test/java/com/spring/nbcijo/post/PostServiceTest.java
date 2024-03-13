@@ -15,7 +15,7 @@ import com.spring.nbcijo.entity.Post;
 import com.spring.nbcijo.entity.User;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
-import com.spring.nbcijo.service.PostService;
+import com.spring.nbcijo.service.PostServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +33,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class PostServiceTest implements PostFixture {
 
     @InjectMocks
-    PostService postService;
+    PostServiceImpl postService;
 
     @Mock
     PostRepository postRepository;

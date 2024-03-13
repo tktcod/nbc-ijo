@@ -8,6 +8,7 @@ import com.spring.nbcijo.global.enumeration.ErrorCode;
 import com.spring.nbcijo.global.exception.InvalidInputException;
 import com.spring.nbcijo.repository.PostRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import com.spring.nbcijo.service.contracts.PostService;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Override
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
         user = userRepository.findById(user.getId())
             .orElseThrow(() -> new InvalidInputException(ErrorCode.USER_NOT_FOUND));
@@ -36,12 +38,14 @@ public class PostService {
         return new PostResponseDto(postRepository.save(post));
     }
 
+    @Override
     public PostResponseDto getPost(Long postId) {
         Post post = findPost(postId);
 
         return new PostResponseDto(post);
     }
 
+    @Override
     public List<PostResponseDto> getPostList() {
         List<Post> postList = postRepository.findAll(Sort.by(Direction.DESC, "createdAt"));
 
@@ -50,6 +54,12 @@ public class PostService {
             .toList();
     }
 
+    @Override
+    public List<PostResponseDto> getPostListWithPaging(Integer page,Integer size, String search) {
+        return postRepository.getPostListWithPaging(page, size, search);
+    }
+
+    @Override
     @Transactional
     public void updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post post = findPost(postId);
@@ -58,6 +68,7 @@ public class PostService {
         post.update(requestDto);
     }
 
+    @Override
     @Transactional
     public void deletePost(Long postId, User user) {
         Post post = findPost(postId);

@@ -10,23 +10,37 @@ import com.spring.nbcijo.jwt.JwtUtil;
 import com.spring.nbcijo.repository.PasswordHistoryRepository;
 import com.spring.nbcijo.repository.RefreshTokenBlacklistRepository;
 import com.spring.nbcijo.repository.UserRepository;
+import com.spring.nbcijo.service.contracts.UserService;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RefreshTokenBlacklistRepository refreshTokenBlacklistRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final PasswordHistoryRepository passwordHistoryRepository;
+    private final AuthenticationManager authenticationManager;
 
+    @Override
+    public Authentication login(String username, String password) {
+
+        return authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(username, password, null)
+        );
+    }
+
+    @Override
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String description = requestDto.getDescription();
@@ -54,6 +68,7 @@ public class UserService {
         passwordHistoryRepository.save(passwordHistory);
     }
 
+    @Override
     public void logout(String refreshToken) {
         Date expirationDate = jwtUtil.extractExpirationDateFromToken(refreshToken);
         if (expirationDate == null) {
