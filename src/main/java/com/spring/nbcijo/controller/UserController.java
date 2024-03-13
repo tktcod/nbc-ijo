@@ -42,24 +42,10 @@ public class UserController {
         HttpServletResponse response) {
         // 사용자 인증
         Authentication authentication = userService.login(requestDto.getUsername(), requestDto.getPassword());
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-        UserRoleEnum role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getRole();
 
-        // AccessToken 생성
-        String token = jwtUtil.createAccessToken(username, role);
-
-        // RefreshToken 생성
-        String refreshToken = jwtUtil.createRefreshToken(username, role);
-
-        // AccessToken을 Response Header에 추가
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-
-        // 리프레시 토큰을 쿠키에 담아 설정
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setMaxAge((int) (jwtUtil.REFRESH_TOKEN_TIME / 1000)); // 쿠키 유효 시간 설정
-        refreshTokenCookie.setHttpOnly(true); // XSS 방지
-        refreshTokenCookie.setPath("/"); // 쿠키 경로 설정
-        response.addCookie(refreshTokenCookie); // 쿠키를 응답에 추가
+        // 토큰 생성 및 응답 설정
+        // AccessToken -> 헤더, RefreshToken -> 쿠키
+        setAuthenticationResponse(authentication, response);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<String>builder()
             .statusCode(HttpStatus.OK.value())
@@ -99,5 +85,27 @@ public class UserController {
             .statusCode(HttpStatus.OK.value())
             .message("로그아웃이 완료되었습니다.")
             .build());
+    }
+
+    private void setAuthenticationResponse(Authentication authentication, HttpServletResponse response) {
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        UserRoleEnum role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getRole();
+
+        // 토큰 생성
+        String accessToken = jwtUtil.createAccessToken(username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username, role);
+
+        // 헤더와 쿠키 설정
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
+        addRefreshTokenInCookie(refreshToken, response);
+    }
+
+    private void addRefreshTokenInCookie(String refreshToken, HttpServletResponse response) {
+        // 리프레시 토큰을 쿠키에 담아 설정
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setMaxAge((int) (jwtUtil.REFRESH_TOKEN_TIME / 1000));
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
     }
 }
