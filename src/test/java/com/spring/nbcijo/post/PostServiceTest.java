@@ -2,6 +2,8 @@ package com.spring.nbcijo.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
@@ -19,6 +21,7 @@ import com.spring.nbcijo.service.PostServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +84,27 @@ class PostServiceTest implements PostFixture {
 
         // when
         var result = postService.getPostList();
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0)).isEqualTo(new PostResponseDto(testPost1));
+        assertThat(result.get(1)).isEqualTo(new PostResponseDto(testPost2));
+    }
+
+    @DisplayName("게시글 페이징 조회")
+    @Test
+    void getPostListWithPagingList() {
+        // given
+        var testPost1 = PostTestUtils.get(TEST_POST, 1L,
+            LocalDateTime.now(), TEST_USER);
+        var testPost2 = PostTestUtils.get(TEST_POST, 2L,
+            LocalDateTime.now().minusMinutes(1), TEST_USER);
+        var response = Stream.of(testPost1, testPost2).map(PostResponseDto::new).toList();
+        given(postRepository.getPostListWithPaging(any(), any(), any()))
+            .willReturn(response);
+
+        // when
+        var result = postService.getPostListWithPaging(anyInt(), anyInt(), anyString());
 
         // then
         assertThat(result).hasSize(2);
