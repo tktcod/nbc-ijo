@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public Authentication login(String username, String password) {
 
         return authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password, null)
+            new UsernamePasswordAuthenticationToken(username, password)
         );
     }
 
